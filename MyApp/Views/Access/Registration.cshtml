@@ -1,0 +1,19 @@
+﻿@model User
+
+
+<form asp-action="Registration" method="post">
+
+    Юзенейм
+<input asp-for="username" type="text"/>
+    Пароль
+    <input asp-for="password" type="text" />
+    Почта
+    <input asp-for="user_info.email" type="text" />
+    Имя
+    <input asp-for="user_info.firstname" type="text" />
+    Фамилия
+    <input asp-for="user_info.lastname" type="text" />
+    
+    <input type="submit" value="send"></input>
+
+</form>
