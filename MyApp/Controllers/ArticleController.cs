@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using MyApp.Models;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.RegularExpressions;
 
 namespace MyApp.Controllers
 {
@@ -24,11 +25,49 @@ namespace MyApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult cringe(string content)
+        public IActionResult cringe(string input)
         {
-            Console.WriteLine(content);
+            //Console.WriteLine(content);
+            
+            List<int> f = new List<int>();
+            List<int> s = new List<int>();
+            List<string> url = new List<string>();
 
-            return View("cringe", content);
+            //string input = "<figure class=\"media\"><oembed url=\"https://www.youtube.com/watch?v=Z2XADS1HGOE\"></oembed></figure>";
+            //string videoId = input.Split("https://www.youtube.com/watch?v=")[1].Split("\"")[0];
+
+            string pattern1 = "<figure class=\"media\">";
+            string pattern2 = "</oembed></figure>";
+            string pattern3 = "https:\\/\\/www\\.youtube\\.com\\/watch\\?v=[a-zA-Z0-9_-]+";
+
+            MatchCollection matches_f = Regex.Matches(input, pattern1), matches_s = Regex.Matches(input, pattern2),
+                matches_url = Regex.Matches(input, pattern3);
+
+            foreach (Match match in matches_f)
+            {
+                f.Add(match.Index);
+            }
+
+            foreach (Match match in matches_s)
+            {
+                s.Add(match.Index + 17);
+            }
+
+            foreach (Match match in matches_url)
+            {
+                url.Add(match.Value);
+            }
+
+            for (int i = 0; i < f.Count; i++) 
+            {
+                input = input.Remove(f[i], s[i] - f[i] + 1);
+
+                input = input.Insert(f[i], $"<iframe width=\"560\" height=\"315\" src=\"{url[i].Replace("watch?v=", "embed/")}\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>");
+            }
+
+            //string output = $"<iframe width=\"560\" height=\"315\" src=\"{embedUrl}\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>";
+
+            return View("cringe", input);
         }
 
         [HttpPost]
@@ -36,6 +75,7 @@ namespace MyApp.Controllers
         public ActionResult UploadImage(List<IFormFile> files) 
         {
             var filepath = "";
+
             foreach (IFormFile photo in Request.Form.Files) 
             {
                 string servermapath = Path.Combine(_env.WebRootPath, "Image", photo.FileName);

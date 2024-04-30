@@ -5,6 +5,14 @@
       "PackagePath": "staticwebassets\\MyApp.bundle.scp.css"
     },
     {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\diagram.png",
+      "PackagePath": "staticwebassets\\Image\\diagram.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\Снимок экрана 2024-04-15 030721.png",
+      "PackagePath": "staticwebassets\\Image\\Снимок экрана 2024-04-15 030721.png"
+    },
+    {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },

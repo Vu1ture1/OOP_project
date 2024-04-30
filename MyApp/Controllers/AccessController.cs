@@ -24,7 +24,14 @@ namespace MyApp.Controllers
 
             if (ClUser.Identity.IsAuthenticated) 
             {
-                return RedirectToAction("Index", "Home");
+                if (ClUser.IsInRole("user") == true)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else if (ClUser.IsInRole("modder") == true) 
+                {
+                    return RedirectToAction("Index", "Modder");
+                }
             }
             
             return View();
@@ -53,7 +60,7 @@ namespace MyApp.Controllers
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, 
                     new ClaimsPrincipal(identity), prop);
 
-                ViewData["Account"] = username;
+                Console.WriteLine(user.user_role);
 
                 return RedirectToAction("Index", "Home");
             }
@@ -91,9 +98,7 @@ namespace MyApp.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-            ViewData["Account"] = "Login";
-
-            return View();
+            return RedirectToAction("Index", "Home");
         }
     }
 }
