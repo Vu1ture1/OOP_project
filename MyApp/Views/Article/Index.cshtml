@@ -1,15 +1,177 @@
-﻿<script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/classic/ckeditor.js" ></script>
+﻿@using Microsoft.AspNetCore.Mvc;
+@using MyApp.DataBaseFolder;
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Authentication;
+@using Microsoft.AspNetCore.Authentication.Cookies;
+@using MyApp.Models;
+@using Microsoft.AspNetCore.Razor.Language.Intermediate;
+@using Microsoft.EntityFrameworkCore;
+
+@{
+
+    ViewData["Title"] = "Home Page";
+
+    if (Context.User.Identity.IsAuthenticated == false)
+    {
+        Layout = "_Layout";
+    }
+    else
+    {
+        List<Claim> cl = Context.User.Claims.ToList();
+
+        if (cl[1].Value == "user")
+        {
+            Layout = "/Views/Shared/layouts/_Layout_user.cshtml";
+        }
+        else if (cl[1].Value == "modder")
+        {
+            Layout = "/Views/Shared/layouts/_Layout_modder.cshtml";
+        }
+        else if (Model.user_role == "admin")
+        {
+            //Layout = "/Views/Shared/layouts/_Layout_test.cshtml"; тут для админа
+        }
+    }
+}
+
+<script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/classic/ckeditor.js" ></script>
+
+<head>
+    <style>
+        body {
+            padding-top: 70px; /* Устанавливаем отступ со всех сторон */
+            
+        }
+
+        .form-control {
+            width: 200px; /* Фиксированная ширина */
+            max-width: 100%; /* Ширина не будет превышать 100% от родительского элемента */
+            display: block;
+            
+            margin-right: 10px;
+            margin-bottom: 20px;
+        }
 
 
-<form asp-action="cringe" method="post">
+        .default-b {
+            border: 2px solid transparent; /* Прозрачная граница в обычном состоянии */
+            background-color: transparent; /* Прозрачный фон в обычном состоянии */
+            color: #000; /* Цвет текста */
+            padding: 5px 10px; /* Отступы вокруг текста */
+            font-size: 20px; /* Размер шрифта */
+            transition: all 0.1s ease; /* Плавность перехода */
+            margin-top: 20px;
+            margin-bottom: 20px;
 
-<textarea class="form-control" name="input" id="myeditor"></textarea>
+        }
 
-<input type="submit" value="send"></input>
+            .default-b:hover {
+                border-color: #000; /* Черная граница при наведении */
+                background-color: rgba(0, 0, 0, 0.1); /* Затемнение фона при наведении */
+                transform: translate(1px, 1px);
+            }
 
-</form>
+        .form-signin > * {
+            margin-bottom: 10px; /* Добавляет отступ снизу для всех элементов внутри .form-signin */
+        }
+
+        .info-label {
+            display: inline-block; /* Делаем элементы строчно-блочными */
+            font-weight: bold;
+            width: 600px; /* Фиксированная ширина для меток */
+            text-align: left; /* Выравниваем текст меток по правому краю */
+            margin-right: 10px; /* Отступ справа от метки до поля */
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        
+
+        .profile-container {
+            width: auto;
+            height: auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            text-align: left; /* Выравниваем текст по левому краю */
+            margin: 0 auto;
+            margin-right: 30px;
+        }
+
+        .text_area {
+            margin-top: 20px;
+        }
+
+        .custom-file-upload {
+            border: 2px solid transparent; /* Прозрачная граница в обычном состоянии */
+            display: inline-block;
+            background-color: transparent; /* Прозрачный фон в обычном состоянии */
+            color: #000; /* Цвет текста */
+            padding: 5px 10px; /* Отступы вокруг текста */
+            font-size: 20px; /* Размер шрифта */
+            transition: all 0.1s ease; /* Плавность перехода */
+            
+            width: 100%; /* Фиксированная ширина для меток */
+            max-width: 200px;
+            min-width: 100px;
+
+            margin-bottom: 20px;
+            
+        }
+
+            .custom-file-upload:hover {
+                border-color: #000; /* Черная граница при наведении */
+                background-color: rgba(0, 0, 0, 0.1); /* Затемнение фона при наведении */
+                transform: translate(1px, 1px);
+            }
+
+        .divv{
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
 
 
+
+    <div class="profile-container">
+        <form asp-action="CreateRequest" method="post" enctype="multipart/form-data">
+            <span class="info-label">Введите темы статьи:</span>
+            <input name="categories" type="text" id="inputcat" class="form-control" placeholder="Categories sep with ','" required>
+            
+            
+            <span class="info-label">Введите заголовок статьи:</span>
+            <input name="title" type="text" id="inputName" class="form-control" placeholder="Article name" required>
+            <span class="info-label">Загрузите обложку статьи(необязательно):</span>
+
+            <div class="divv">
+            <label for="fileUpload" class="custom-file-upload">
+                    <i class="fa-solid fa-image"></i> Загрузить файл
+            </label>
+            <input type="file" id="fileUpload" name="fileUpload" accept=".png" style="display: none;" />
+            <span class="" id="fileName"></span>
+            </div>
+
+            <span class="info-label">Содержимое статьи:</span>
+            <textarea class="form-control" name="input" id="myeditor"></textarea>
+
+            <button class="default-b text-dark" type="submit" value="send"><i class="fa-solid fa-plus"></i> Создать</button>
+        </form>
+    </div>
+
+
+</body>
+
+<script>
+    // JavaScript для отображения имени файла
+    document.getElementById('fileUpload').addEventListener('change', function () {
+        // Получаем имя файла из пути файла
+        var fileName = "File: " + this.value.split('\\').pop();
+        // Обновляем текст элемента с именем файла
+        document.getElementById('fileName').textContent = fileName;
+    });
+
+</script>
 <script>
     class MyUploadAdapter {
         constructor(loader) {
@@ -125,3 +287,29 @@
         });
 </script>
 
+
+@* <div class="profile-container">
+        <form asp-action="CreateRequest" method="post">
+            <span class="info-label">Введите темы статьи:</span>
+            <input name="categories" type="text" id="inputcat" class="form-control" placeholder="Categories sep with ','" required>
+            <span class="info-label">Введите заголовок статьи:</span>
+            <input name="title" type="text" id="inputName" class="form-control" placeholder="Article name" required>
+            <span class="info-label">Содержимое статьи:</span>
+            <textarea class="form-control" name="input" id="myeditor"></textarea>
+
+            <button class="default-b text-dark" type="submit" value="send">Создать</button>
+        </form>
+    </div> *@
+
+@* <form asp-action="cringe" method="post">
+Title of article:
+<textarea class="form-control" name="title"></textarea>
+Context:
+<textarea class="form-control" name="input" id="myeditor"></textarea>
+
+<input type="submit" value="send"></input>
+
+
+
+
+</form> *@

@@ -5,13 +5,16 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using MyApp.Models;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.EntityFrameworkCore;
 
 namespace MyApp.Controllers
 {
     public class AccessController : Controller
     {
+        private readonly IWebHostEnvironment _env;
+
         private DBContext context;
-        public AccessController(DBContext con) { context = con; }
+        public AccessController(IWebHostEnvironment env, DBContext con) { _env = env; context = con; }
         
         public IActionResult Index()
         {
@@ -42,7 +45,7 @@ namespace MyApp.Controllers
         {
             if (context.Users.Any(var => var.username == username && var.password == password) == true) 
             {
-                var user = context.Users.Where<User>(var => var.username == username && var.password == password).FirstOrDefault();
+                var user = context.Users.Include(u => u.user_info).Where<User>(var => var.username == username && var.password == password).FirstOrDefault();
 
                 var claims = new List<Claim>() { new Claim(ClaimTypes.Name, username),
                                                  new Claim(ClaimTypes.Role, user.user_role),
@@ -77,7 +80,9 @@ namespace MyApp.Controllers
         [HttpPost]
         public IActionResult Registration(User user)
         {
-            if (context.Users.Any(var => var.user_info.email == user.user_info.email) == true)
+            user.path_to_icon = "https://localhost:7012/Avatar_png/blank-profile-picture-973460_1280.png";
+
+            if (context.Users.Include(u => u.user_info).Any(var => var.user_info.email == user.user_info.email) == true)
             {
                 //тут сообщение об ошибке тк email уже есть
                 return RedirectToAction("Index", "Home");
@@ -91,7 +96,53 @@ namespace MyApp.Controllers
                 context.SaveChanges();
             }
 
+            return RedirectToAction("Login", "Access");
+        }
+
+        public IActionResult Account() 
+        {
+            ClaimsPrincipal ClUser = HttpContext.User;
+
+            List<Claim> cl = ClUser.Claims.ToList();
+
+            var user = context.Users.Include(u => u.user_info).Where<User>(var => var.username == cl[0].Value && var.user_info.email == cl[2].Value).FirstOrDefault();
+
+            return View(user);
+        }
+
+        public IActionResult Icon()
+        {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Upload(IFormFile fileUpload)
+        {
+            var filepath = "";
+
+            string servermapath = Path.Combine(_env.WebRootPath, "Avatar_png", fileUpload.FileName);
+            //C:\repos\MyApp\MyApp\wwwroot\Image
+
+            using (var stream = new FileStream(servermapath, FileMode.Create))
+            {
+                fileUpload.CopyTo(stream);
+            }
+
+            filepath = "https://localhost:7012/" + "Avatar_png/" + fileUpload.FileName;
+
+            ClaimsPrincipal ClUser = HttpContext.User;
+
+            List<Claim> cl = ClUser.Claims.ToList();
+
+            foreach (Claim claim in cl) { Console.WriteLine(claim.Value); };
+
+            var user = context.Users.Include(u => u.user_info).Where<User>(var => var.username == cl[0].Value && var.user_info.email == cl[2].Value).FirstOrDefault();
+
+            user.path_to_icon = filepath;
+
+            context.SaveChanges();
+
+            return RedirectToAction("Account", "Access");
         }
 
         public async Task<IActionResult> Logout()

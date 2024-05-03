@@ -5,7 +5,7 @@
 namespace MyApp.Migrations
 {
     /// <inheritdoc />
-    public partial class Base2 : Migration
+    public partial class migr4 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,7 +16,10 @@ namespace MyApp.Migrations
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    user_id = table.Column<int>(type: "int", nullable: false),
                     title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    status = table.Column<bool>(type: "bit", nullable: false),
+                    path_to_corer = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     date = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -41,6 +44,44 @@ namespace MyApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Category",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    categoty_str = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Articleid = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Category", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Category_Articles_Articleid",
+                        column: x => x.Articleid,
+                        principalTable: "Articles",
+                        principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Requests",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    articleid = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Requests", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Requests_Articles_articleid",
+                        column: x => x.articleid,
+                        principalTable: "Articles",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -50,6 +91,7 @@ namespace MyApp.Migrations
                     password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     serialize_article_ids = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     user_role = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    path_to_icon = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     user_info_id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -64,6 +106,16 @@ namespace MyApp.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Category_Articleid",
+                table: "Category",
+                column: "Articleid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Requests_articleid",
+                table: "Requests",
+                column: "articleid");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_user_info_id",
                 table: "Users",
                 column: "user_info_id");
@@ -73,10 +125,16 @@ namespace MyApp.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Articles");
+                name: "Category");
+
+            migrationBuilder.DropTable(
+                name: "Requests");
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Articles");
 
             migrationBuilder.DropTable(
                 name: "UserInfo");

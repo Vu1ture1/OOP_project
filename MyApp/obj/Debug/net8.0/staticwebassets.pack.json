@@ -5,8 +5,44 @@
       "PackagePath": "staticwebassets\\MyApp.bundle.scp.css"
     },
     {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\1.png",
+      "PackagePath": "staticwebassets\\Article_png\\1.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\12.png",
+      "PackagePath": "staticwebassets\\Article_png\\12.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\Снимок экрана 2024-03-18 044522.png",
+      "PackagePath": "staticwebassets\\Article_png\\Снимок экрана 2024-03-18 044522.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\Снимцйвйцвцйок экрана 2024-04-20 231358.png",
+      "PackagePath": "staticwebassets\\Article_png\\Снимцйвйцвцйок экрана 2024-04-20 231358.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Avatar_png\\26344-4-hellsing-transparent.png",
+      "PackagePath": "staticwebassets\\Avatar_png\\26344-4-hellsing-transparent.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Avatar_png\\blank-profile-picture-973460_1280.png",
+      "PackagePath": "staticwebassets\\Avatar_png\\blank-profile-picture-973460_1280.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Avatar_png\\download.jpg",
+      "PackagePath": "staticwebassets\\Avatar_png\\download.jpg"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\diagram (1).png",
+      "PackagePath": "staticwebassets\\Image\\diagram (1).png"
+    },
+    {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\diagram.png",
       "PackagePath": "staticwebassets\\Image\\diagram.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\Снимок экрана 2024-03-18 061545.png",
+      "PackagePath": "staticwebassets\\Image\\Снимок экрана 2024-03-18 061545.png"
     },
     {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\Снимок экрана 2024-04-15 030721.png",

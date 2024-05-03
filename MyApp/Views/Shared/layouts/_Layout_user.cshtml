@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MyApp</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MyApp.styles.css" asp-append-version="true" />
+
+    <style>
+        .left-nav {
+            top: 70px;
+            width: 175px;
+            position: fixed;
+            height: calc(100% - 70px);
+            background-color: #ffffff;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .nav-link {
+            /* display: flex; */ /* Элементы внутри будут расположены горизонтально */
+            /*  align-items: center; */ /* Центрирование элементов по вертикали */
+            /* text-decoration: none; */ /* Убираем подчеркивание текста */
+
+            display: flex;
+            align-items: center;
+            padding-left: 10px; /* Добавлен отступ слева */
+        }
+
+            .nav-link i {
+                /* margin-right: auto; */ /* Автоматический отступ справа, выравнивает текст после иконки */
+
+                min-width: 30px; /* Минимальная ширина для иконок */
+                margin-right: 10px; /* Отступ справа для иконок */
+                text-align: center; /* Центрирование иконки внутри элемента */
+            }
+
+            .nav-link:hover {
+                border: 2px solid #000; /* Черная обводка */
+                background-color: rgba(0, 0, 0, 0.1); /* Затемнение фона */
+            }
+
+        .up-nav {
+            padding: 11px;
+            position: fixed; /* Фиксируем навигационную панель */
+            top: 0; /* Располагаем её в верхней части экрана */
+            width: 100%; /* Задаём ширину 100%, чтобы она растягивалась на всю ширину экрана */
+            z-index: 1000; /* Устанавливаем z-index, чтобы навигационная панель была поверх других элементов */
+            background-color: white;
+            height: 70px;
+        }
+
+        .nav-link-special {
+            font-size: 25px;
+            font-weight: bold;
+            color: #000; /* Черный цвет текста */
+            text-decoration: none; /* Без подчеркивания */
+            padding: 15px; /* Отступ вокруг текста */
+        }
+
+        /* 1630px */
+
+        /* @@media (max-width: 80%){
+            .left-nav{
+                display: none;
+            }
+        } */
+
+    </style>
+
+    @* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"> *@
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
+    <script src="https://kit.fontawesome.com/77e4e26825.js" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg up-nav">
+        <a class="nav-link-special text-dark" asp-area="" asp-controller="Home" asp-action="Index"><i class="fa-solid fa-bookmark"></i> Статьи</a>
+
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+
+
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Access" asp-action="Logout"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Access" asp-action="Account"><i class="fas fa-user"></i> Аккаунт</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="left-nav">
+        <nav>
+
+
+            <a class="nav-link text-dark" asp-area="" asp-controller="Article" asp-action="Index"><i class="fas fa-plus-square"></i> CreateArticle</a>
+            @* <a class="nav-link text-dark" asp-area="" asp-controller="Access" asp-action="Logout"><i class="fas fa-sign-out-alt"></i> Logout</a> *@
+
+        </nav>
+    </div>
+
+    
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var initialWidth = window.innerWidth;
+
+            function resizeHandler() {
+                var screenWidth = window.innerWidth;
+                var maxScreenWidth = initialWidth*0.98;
+
+                if (screenWidth <= maxScreenWidth) {
+                    document.querySelector('.left-nav').style.display = 'none';
+                } else {
+                    document.querySelector('.left-nav').style.display = 'block';
+                }
+            }
+
+            window.addEventListener('resize', resizeHandler);
+
+            // Вызовите функцию обработчика события resize вручную
+            resizeHandler();
+        });
+    </script>
+
+</body>
+</html>

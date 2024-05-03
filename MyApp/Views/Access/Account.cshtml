@@ -1,0 +1,136 @@
+﻿@model User
+
+@{
+    if (Model.user_role == "user")
+    {
+        Layout = "/Views/Shared/layouts/_Layout_user.cshtml";
+    }
+    else if (Model.user_role == "modder")
+    {
+        Layout = "/Views/Shared/layouts/_Layout_modder.cshtml";
+    }
+    else if (Model.user_role == "admin")
+    {
+        //Layout = "/Views/Shared/layouts/_Layout_test.cshtml"; тут для админа
+    }
+
+    string path = Model.path_to_icon;
+}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        .profile-container {
+            width: 750px;
+            height: auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            text-align: left; /* Выравниваем текст по левому краю */
+            margin: 0 auto;
+        }
+
+        body {
+            padding-top: 70px; /* Устанавливаем отступ со всех сторон */
+        }
+
+        .avatar {
+            width: 150px;
+            height: 150px;
+            background-color: #f3f3f3;
+            border-radius: 50%;
+            margin: auto;
+            display: block;
+  
+        }
+
+        .info-label {
+            display: inline-block; /* Делаем элементы строчно-блочными */
+            width: 350px; /* Фиксированная ширина для меток */
+            text-align: left; /* Выравниваем текст меток по правому краю */
+            margin-right: 10px; /* Отступ справа от метки до поля */
+            font-size: 20px;
+            margin-bottom:20px;
+        }
+
+        .info-content {
+            display: inline-block; /* Делаем элементы строчно-блочными */
+        }
+
+        .username, .email, .fullname {
+            margin: 10px 0;
+        }
+
+        .default-b {
+            border: 2px solid transparent; /* Прозрачная граница в обычном состоянии */
+            background-color: transparent; /* Прозрачный фон в обычном состоянии */
+            color: #000; /* Цвет текста */
+            padding: 5px 10px; /* Отступы вокруг текста */
+            font-size: 20px; /* Размер шрифта */
+            transition: all 0.1s ease; /* Плавность перехода */
+
+            display: block; /* Блочное отображение */
+            margin-left: auto; /* Автоматический отступ слева */
+            margin-right: auto; /* Автоматический отступ справа */
+            
+        }
+
+            .default-b:hover {
+                border-color: #000; /* Черная граница при наведении */
+                background-color: rgba(0, 0, 0, 0.1); /* Затемнение фона при наведении */
+                transform: translate(1px, 1px);
+            }
+
+        .link-but {
+            border: 2px solid transparent; /* Прозрачная граница в обычном состоянии */
+            background-color: transparent; /* Прозрачный фон в обычном состоянии */
+            text-decoration: none;
+            color: #000; /* Цвет текста */
+            padding: 5px 10px; /* Отступы вокруг текста */
+            font-size: 20px; /* Размер шрифта */
+            transition: all 0.1s ease; /* Плавность перехода */
+            display: inline-block; /* Измените на inline-block для контроля ширины */
+            text-align: center; /* Выравнивание текста по центру */
+            width: auto; /* Автоматическая ширина в зависимости от содержимого */
+            max-width: 300px;
+
+            display:block;
+            margin-left: auto; /* Автоматический отступ слева */
+            margin-right: auto; /* Автоматический отступ справа */
+            margin-bottom: 10px;
+            margin-top: 20px;
+        }
+
+            .link-but:hover {
+                border-color: #000; /* Черная граница при наведении */
+                background-color: rgba(0, 0, 0, 0.1); /* Затемнение фона при наведении */
+                transform: translate(1px, 1px);
+                color: #000; /* Черный цвет текста при наведении */
+                text-decoration: none; /* Убираем подчеркивание при наведении */
+            }
+
+        
+            
+    </style>
+</head>
+<body>
+    
+        
+    <div class="profile-container">
+        <img src=@path alt="Avatar" class="avatar"></img>
+        <a class="link-but" asp-area="" asp-controller="Access" asp-action="Icon"><i class="fa-solid fa-image"></i> Изменить фото профиля</a>
+        
+
+        <div class="username"><span class="info-label"><i class="fa-solid fa-user"></i> Имя пользователя (username):</span><span class="info-content">@Model.username</span></div>
+        <div class="email"><span class="info-label"><i class="fa-solid fa-paper-plane"></i> Почта:</span><span class="info-content">@Model.user_info.email</span></div>
+        <div class="fullname"><span class="info-label"><i class="fa-solid fa-address-book"></i> Полное имя:</span><span class="info-content">@Model.user_info.firstname @Model.user_info.lastname</span></div>
+        @if (Model.user_role == "modder")
+        {
+            <a class="link-but text-dark" asp-area="" asp-controller="Modder" asp-action="Index"><i class="fa-solid fa-pen"></i> Модерировать статьи</a>
+        }
+        <button class="default-b text-dark"><i class="fa-solid fa-list"></i> Открыть все статьи</button>
+    </div>
+</body>
+</html>

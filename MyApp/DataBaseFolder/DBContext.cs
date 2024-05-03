@@ -13,5 +13,7 @@ namespace MyApp.DataBaseFolder
         public DbSet<User> Users { get; set; }
 
         public DbSet<Article> Articles { get; set; }
+
+        public DbSet<ArticleRequest> Requests { get; set; }
     }
 }

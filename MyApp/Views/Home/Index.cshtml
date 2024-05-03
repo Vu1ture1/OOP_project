@@ -1,10 +1,46 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Mvc;
+@using MyApp.DataBaseFolder;
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Authentication;
+@using Microsoft.AspNetCore.Authentication.Cookies;
+@using MyApp.Models;
+@using Microsoft.AspNetCore.Razor.Language.Intermediate;
+@using Microsoft.EntityFrameworkCore;
+
+@{
+
     ViewData["Title"] = "Home Page";
 
-    Layout = "_Layout";
+    if (Context.User.Identity.IsAuthenticated == false)
+    {
+        Layout = "_Layout";
+    }
+    else
+    {
+        List<Claim> cl = Context.User.Claims.ToList();
+
+        if (cl[1].Value == "user")
+        {
+            Layout = "/Views/Shared/layouts/_Layout_user.cshtml";
+        }
+        else if (cl[1].Value == "modder")
+        {
+            Layout = "/Views/Shared/layouts/_Layout_modder.cshtml";
+        }
+        else if (Model.user_role == "admin")
+        {
+            //Layout = "/Views/Shared/layouts/_Layout_test.cshtml"; тут для админа
+        }
+    }
 }
+
+
+<head>
+   
+</head>
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    
 </div>
