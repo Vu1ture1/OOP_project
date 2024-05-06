@@ -45,7 +45,7 @@ namespace MyApp.Controllers
         {
             if (context.Users.Any(var => var.username == username && var.password == password) == true) 
             {
-                var user = context.Users.Include(u => u.user_info).Where<User>(var => var.username == username && var.password == password).FirstOrDefault();
+                var user = context.Users.Include(u => u.user_info).Include(a => a.channel_articles).Include(sub => sub.my_subscribes).Where<User>(var => var.username == username && var.password == password).FirstOrDefault();
 
                 var claims = new List<Claim>() { new Claim(ClaimTypes.Name, username),
                                                  new Claim(ClaimTypes.Role, user.user_role),
@@ -82,7 +82,7 @@ namespace MyApp.Controllers
         {
             user.path_to_icon = "https://localhost:7012/Avatar_png/blank-profile-picture-973460_1280.png";
 
-            if (context.Users.Include(u => u.user_info).Any(var => var.user_info.email == user.user_info.email) == true)
+            if (context.Users.Include(u => u.user_info).Include(a => a.channel_articles).Include(sub => sub.my_subscribes).Any(var => var.user_info.email == user.user_info.email) == true)
             {
                 //тут сообщение об ошибке тк email уже есть
                 return RedirectToAction("Index", "Home");
@@ -105,7 +105,7 @@ namespace MyApp.Controllers
 
             List<Claim> cl = ClUser.Claims.ToList();
 
-            var user = context.Users.Include(u => u.user_info).Where<User>(var => var.username == cl[0].Value && var.user_info.email == cl[2].Value).FirstOrDefault();
+            var user = context.Users.Include(u => u.user_info).Include(a => a.channel_articles).Include(sub => sub.my_subscribes).Where<User>(var => var.username == cl[0].Value && var.user_info.email == cl[2].Value).FirstOrDefault();
 
             return View(user);
         }

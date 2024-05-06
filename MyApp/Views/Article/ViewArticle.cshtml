@@ -1,0 +1,433 @@
+﻿@using Microsoft.AspNetCore.Mvc;
+@using MyApp.DataBaseFolder;
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Authentication;
+@using Microsoft.AspNetCore.Authentication.Cookies;
+@using MyApp.Models;
+@using Microsoft.AspNetCore.Razor.Language.Intermediate;
+@using Microsoft.EntityFrameworkCore;
+@using Humanizer;
+@using System.Globalization;
+
+
+@model Article
+
+@{
+    if (Context.User.Identity.IsAuthenticated == false)
+    {
+        Layout = "_Layout";
+    }
+    else
+    {
+        List<Claim> cl = Context.User.Claims.ToList();
+
+        if (cl[1].Value == "user")
+        {
+            Layout = "/Views/Shared/layouts/_Layout_user.cshtml";
+        }
+        else if (cl[1].Value == "modder")
+        {
+            Layout = "/Views/Shared/layouts/_Layout_modder.cshtml";
+        }
+        else if (cl[1].Value == "admin")
+        {
+            //Layout = "/Views/Shared/layouts/_Layout_test.cshtml"; тут для админа
+        }
+    }
+
+    string check_sub = (string)ViewData["CheckSubStr"];
+
+    string check_like = (string)ViewData["CheckLikeStr"];
+
+}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        .profile-container {
+            width: 750px;
+            height: auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            text-align: left; /* Выравниваем текст по левому краю */
+            margin: 0 auto;
+        }
+
+
+
+            .profile-container img {
+                max-width: 100%; /* Ограничивает ширину изображения шириной родительского элемента */
+                height: auto; /* Позволяет высоте изображения автоматически изменяться в соответствии с шириной, сохраняя пропорции */
+            }
+
+
+        .profile-container-comments {
+            width: 750px;
+            height: auto;
+            margin: 0 auto;
+            margin-top: 20px;
+        }
+
+        body {
+            padding-top: 70px; /* Устанавливаем отступ со всех сторон */
+        }
+
+        .textt {
+            font-weight: bold;
+        }
+
+        .texttt {
+            font-size: 13px;
+            color: darkgray;
+            margin-bottom: 15px;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            background-color: #f3f3f3;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .avatar_com {
+            width: 40px;
+            height: 40px;
+            background-color: #f3f3f3;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .channel-info {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .channel-link {
+            color: black;
+            font-weight: 550;
+            text-decoration: none; /* Убирает подчеркивание */
+            position: relative; /* Для точного позиционирования */
+        }
+
+            .channel-link:hover {
+                color: darkgray; /* Цвет при наведении (серый) */
+                text-decoration: none; /* Добавляет подчеркивание при наведении */
+            }
+
+        .default-b {
+            border: 2px solid transparent; /* Прозрачная граница в обычном состоянии */
+            background-color: transparent; /* Прозрачный фон в обычном состоянии */
+            color: #000; /* Цвет текста */
+            padding: 5px 10px; /* Отступы вокруг текста */
+            font-size: 20px; /* Размер шрифта */
+            transition: all 0.1s ease; /* Плавность перехода */
+            text-decoration: none;
+
+            font-size: 15px;
+        }
+
+            .default-b:hover {
+                border-color: #000; /* Черная граница при наведении */
+                background-color: rgba(0, 0, 0, 0.1); /* Затемнение фона при наведении */
+                color: black;
+                transform: translate(1px, 1px);
+            }
+
+        .additional-text {
+            font-size: 0.8em; /* Размер шрифта */
+            color: #888; /* Цвет текста */
+            position: absolute;
+            bottom: -15px; /* Опускает текст вниз */
+            left: 15% + 10px;
+        }
+
+        .channel-form {
+            height: 50px; /* Высота должна соответствовать высоте иконки */
+            margin-left: auto;
+        }
+
+        .channel-form-com {
+            height: 40px; /* Высота должна соответствовать высоте иконки */
+            margin-left: auto;
+        }
+
+        .approve-button {
+            border: 2px solid transparent; /* Прозрачная граница в обычном состоянии */
+            background-color: transparent; /* Прозрачный фон в обычном состоянии */
+            color: #000; /* Цвет текста */
+            padding: 5px 10px; /* Отступы вокруг текста */
+            font-size: 20px; /* Размер шрифта */
+            transition: all 0.1s ease; /* Плавность перехода */
+
+            font-size: 15px;
+        }
+
+        .profile-container-comments-not-signin {
+            width: 750px;
+            height: auto;
+            margin: 0 auto;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+        }
+
+        .channel-form-nots {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .default-b-nots {
+            border: 2px solid transparent; /* Прозрачная граница в обычном состоянии */
+            background-color: transparent; /* Прозрачный фон в обычном состоянии */
+            color: #000; /* Цвет текста */
+            padding: 5px 10px; /* Отступы вокруг текста */
+            font-size: 20px; /* Размер шрифта */
+            transition: all 0.1s ease; /* Плавность перехода */
+            text-decoration: none;
+            margin-left: auto;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            margin-right: 10px;
+            font-size: 15px;
+        }
+
+            .default-b-nots:hover {
+                border-color: #000; /* Черная граница при наведении */
+                background-color: rgba(0, 0, 0, 0.1); /* Затемнение фона при наведении */
+                color: black;
+                transform: translate(1px, 1px);
+            }
+
+
+    </style>
+</head>
+<body>
+
+    @{
+        string GetSubscriberDeclension(int count)
+        {
+            int remainder = count % 100;
+            if (remainder >= 11 && remainder <= 19)
+            {
+                return "подписчиков";
+            }
+
+            remainder = count % 10;
+            switch (remainder)
+            {
+                case 1:
+                    return "подписчик";
+                case 2:
+                case 3:
+                case 4:
+                    return "подписчика";
+                default:
+                    return "подписчиков";
+            }
+        }
+    }
+    <div class="profile-container">
+
+        <div class="channel-info">
+            <img class="avatar" src=@Model.user.path_to_icon alt="Изображение канала">
+
+            <div>
+                <form class="channel-form" method="post" action="@Url.Action("", "")" class="channel-form">
+                    <input type="hidden" name="user_id" value=@Model.user.id />
+                    <div>
+
+                        <a href="javascript:;" onclick="this.parentNode.parentNode.submit();" class="channel-link">@Model.user.channelname</a>
+
+                        @{
+                            string str = Model.user.subscribers_num.ToString() + " " + @GetSubscriberDeclension(Model.user.subscribers_num);
+                        }
+
+                        <p class="additional-text">@str</p>
+                    </div>
+                </form>
+            </div>
+
+            @{
+                if (check_sub == "not sub")
+                {
+                    <form method="post" action="@Url.Action("SubscribeArticle", "Article")" class="channel-form">
+                        <input type="hidden" name="articleId" value=@Model.id />
+                        <input type="hidden" name="userId" value=@Model.user.id />
+                        <button class="default-b" type="submit">Подписаться</button>
+                    </form>
+                }
+                else if (check_sub == "sub")
+                {
+                    <form method="post" action="@Url.Action("UnSubscribeArticle", "Article")" class="channel-form">
+                        <input type="hidden" name="articleId" value=@Model.id />
+                        <input type="hidden" name="userId" value=@Model.user.id />
+                        <button class="default-b" type="submit">Вы подписаны</button>
+                    </form>
+                }
+                else
+                {
+                    <div class="channel-form"><a class="default-b" asp-area="" asp-controller="Access" asp-action="Login">Подписаться</a></div>
+                }
+            }
+
+
+
+        </div>
+
+        <h3 class="textt">@Model.title</h3>
+        @{
+            string formattedDate = Convert.ToDateTime(Model.date).ToString("d MMMM yyy, в HH:mm", new CultureInfo("ru-RU"));
+        }
+
+
+        <div class="texttt">@formattedDate</div>
+        @Html.Raw(@Model.content)
+    </div>
+
+    @{
+        string FormatNumber(int num)
+        {
+            if (num >= 1000000)
+            {
+                double numm = (num / 1000000);
+
+                numm = Math.Round(numm, 1);
+
+                return $" {numm}M лайков";
+            }
+            else if (num >= 1000)
+            {
+                double numm = (num / 1000);
+
+                numm = Math.Round(numm, 1);
+
+                return $" {numm}K лайков";
+            }
+            else if (num == 1)
+            {
+                return $" {num} лайк";
+            }
+            else if (num == 2)
+            {
+                return $" {num} лайка";
+            }
+            else
+            {
+                return $" {num} лайков";
+            }
+        }
+    }
+
+    <div class="profile-container-comments">
+
+        @{
+            if (check_like == "not like")
+            {
+                <form method="post" action="@Url.Action("Like", "Article")" class="channel-form">
+                    <input type="hidden" name="articleId" value=@Model.id />
+                    <button class="default-b" type="submit"><i class="fa-regular fa-thumbs-up"></i>@FormatNumber(Model.likes)</button>
+                </form>
+            }
+            else if (check_like == "like")
+            {
+                <form method="post" action="@Url.Action("UnLike", "Article")" class="channel-form">
+                    <input type="hidden" name="articleId" value=@Model.id />
+                    <button class="default-b" type="submit"><i class="fa-solid fa-thumbs-up"></i>@FormatNumber(Model.likes)</button>
+                </form>
+            }
+            else
+            {
+                <div class="channel-form"><button class="default-b" asp-controller="Access" asp-action="Login"><i class="fa-regular fa-thumbs-up"></i>@FormatNumber(Model.likes)</button></div>
+            }
+        }
+        
+        
+        @{
+            string com_str = $" {Model.comments.Count}";
+
+            if (com_str == " 0")
+            {
+                com_str = " пока нет";
+            }
+        }
+        
+        <h3>Комментарии:<a style="color: gray;">@com_str</a></h3>
+
+        @{
+            if (check_sub == "sub" || check_sub == "not sub")
+            {
+                <form method="post" asp-action="CommentCreation" asp-controller="Article">
+                    <textarea name="con" style="width: 100%; border-radius: 5px; height: 80px; margin-top: 10px;" placeholder="Написать комментарий" required></textarea>
+                    <input type="hidden" name="articleId" value=@Model.id />
+                    <button class="default-b" style="margin-left: auto;" type="submit">Отправить</button>
+                </form>
+            }
+            else
+            {
+                
+
+                <div class="profile-container-comments-not-signin">
+                    <h5 style="margin-left: 10px; white-space: nowrap;">Чтобы писать комментарии войдите в свой аккаунт</h5>
+                    <div class="channel-form-nots"><a class="default-b-nots" asp-area="" asp-controller="Access" asp-action="Login">Войти</a></div>
+                </div>
+
+            
+            }
+
+        }
+
+        
+       
+        
+        <div style="margin-top: 20px;">
+        
+        @{
+            foreach (Comment com in Model.comments)
+            {
+                <div style="margin-bottom: 30px;">
+                <div class="channel-info">
+                    <img class="avatar_com" src=@com.creator.path_to_icon alt="Изображение канала">
+
+                    <div>
+                        <form class="channel-form-com" method="post" action="@Url.Action("", "")" class="channel-form">
+                            <input type="hidden" name="user_id" value=@Model.user.id />
+                            <div>
+                                <a href="javascript:;" onclick="this.parentNode.parentNode.submit();" class="channel-link">@com.creator.username</a>
+
+                                        @{
+                                            string date = com.created;
+
+                                            DateTime date_conv = Convert.ToDateTime(date);
+
+                                            date = date_conv.Humanize(false);
+                                        }
+
+                                        <p class="additional-text" style="">@date</p>
+                            </div>
+                        </form>
+
+                        
+                    </div>
+
+                        
+                </div>
+                
+                <a>@com.context</a>
+                    </div>
+            }
+        }
+
+        </div>
+
+    </div>
+</body>
+</html>
+
+<script>

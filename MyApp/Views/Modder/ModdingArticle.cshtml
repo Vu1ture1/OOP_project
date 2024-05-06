@@ -1,0 +1,261 @@
+﻿@using Microsoft.AspNetCore.Mvc;
+@using MyApp.DataBaseFolder;
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Authentication;
+@using Microsoft.AspNetCore.Authentication.Cookies;
+@using MyApp.Models;
+@using Microsoft.AspNetCore.Razor.Language.Intermediate;
+@using Microsoft.EntityFrameworkCore;
+@using Humanizer;
+@using System.Globalization;
+
+
+@model ArticleRequest
+
+@{
+    List<Claim> cl = Context.User.Claims.ToList();
+
+    if (cl[1].Value == "modder")
+    {
+        Layout = "/Views/Shared/layouts/_Layout_modder.cshtml";
+    }
+    else if (cl[1].Value == "admin")
+    {
+        //Layout = "/Views/Shared/layouts/_Layout_test.cshtml"; тут для админа
+    }
+
+    bool check = (bool)ViewData["CheckSub"];
+
+}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        .profile-container {
+            width: 750px;
+            height: auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            text-align: left; /* Выравниваем текст по левому краю */
+            margin: 0 auto;
+        }
+
+            .profile-container img {
+                max-width: 100%; /* Ограничивает ширину изображения шириной родительского элемента */
+                height: auto; /* Позволяет высоте изображения автоматически изменяться в соответствии с шириной, сохраняя пропорции */
+            }
+
+        body {
+            padding-top: 70px; /* Устанавливаем отступ со всех сторон */
+        }
+
+        .textt{
+            font-weight: bold;
+        }
+
+        .texttt{
+            font-size: 13px;
+        
+            color: darkgray;
+            margin-bottom: 15px;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            background-color: #f3f3f3;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .channel-info {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .channel-link {
+            color: black;
+            font-weight: 550;
+            text-decoration: none; /* Убирает подчеркивание */
+            position: relative; /* Для точного позиционирования */
+        }
+
+            .channel-link:hover {
+                color: darkgray; /* Цвет при наведении (серый) */
+                text-decoration: none; /* Добавляет подчеркивание при наведении */
+            }
+
+        .default-b {
+            border: 2px solid transparent; /* Прозрачная граница в обычном состоянии */
+            background-color: transparent; /* Прозрачный фон в обычном состоянии */
+            color: #000; /* Цвет текста */
+            padding: 5px 10px; /* Отступы вокруг текста */
+            font-size: 20px; /* Размер шрифта */
+            transition: all 0.1s ease; /* Плавность перехода */
+
+            font-size: 15px;
+        }
+
+            .default-b:hover {
+                border-color: #000; /* Черная граница при наведении */
+                background-color: rgba(0, 0, 0, 0.1); /* Затемнение фона при наведении */
+                transform: translate(1px, 1px);
+            }
+
+        .additional-text {
+            font-size: 0.8em; /* Размер шрифта */
+            color: #888; /* Цвет текста */
+            position: absolute;
+            bottom: -10px; /* Опускает текст вниз */
+            left: 15% + 10px;
+        }
+
+        .channel-form {
+            height: 50px; /* Высота должна соответствовать высоте иконки */
+            margin-left: auto;
+        }
+
+        .approve-button {
+            border: 2px solid transparent; /* Прозрачная граница в обычном состоянии */
+            background-color: transparent; /* Прозрачный фон в обычном состоянии */
+            color: #000; /* Цвет текста */
+            padding: 5px 10px; /* Отступы вокруг текста */
+            font-size: 20px; /* Размер шрифта */
+            transition: all 0.1s ease; /* Плавность перехода */
+
+            font-size: 15px;
+        }
+
+            .approve-button:hover {
+                border-color: #000; /* Черная граница при наведении */
+                color: white;
+                background-color: limegreen;
+                transform: translate(1px, 1px);
+            }
+
+        .decine-button {
+            border: 2px solid transparent; /* Прозрачная граница в обычном состоянии */
+            background-color: transparent; /* Прозрачный фон в обычном состоянии */
+            color: #000; /* Цвет текста */
+            padding: 5px 10px; /* Отступы вокруг текста */
+            font-size: 20px; /* Размер шрифта */
+            transition: all 0.1s ease; /* Плавность перехода */
+
+            font-size: 15px;
+        }
+
+            .decine-button:hover {
+                border-color: #000; /* Черная граница при наведении */
+                color: white;
+                background-color: red;
+                transform: translate(1px, 1px);
+            }
+
+    </style>
+</head>
+<body>
+
+    @{
+        string GetSubscriberDeclension(int count)
+        {
+            int remainder = count % 100;
+            if (remainder >= 11 && remainder <= 19)
+            {
+                return "подписчиков";
+            }
+
+            remainder = count % 10;
+            switch (remainder)
+            {
+                case 1:
+                    return "подписчик";
+                case 2:
+                case 3:
+                case 4:
+                    return "подписчика";
+                default:
+                    return "подписчиков";
+            }
+        }
+    }
+    <div class="profile-container">
+        
+        <div class="channel-info">
+        <img class="avatar" src=@Model.article.user.path_to_icon alt="Изображение канала">
+
+        <div>
+        <form class="channel-form" method="post" action="@Url.Action("", "")" class="channel-form">
+            <input type="hidden" name="user_id" value=@Model.article.user.id />
+            <div>
+
+                <a href="javascript:;" onclick="this.parentNode.parentNode.submit();" class="channel-link">@Model.article.user.channelname</a>
+
+                        @{
+                            string str = Model.article.user.subscribers_num.ToString() + " " + @GetSubscriberDeclension(Model.article.user.subscribers_num);
+                        }
+
+                        <p class="additional-text">@str</p>
+            </div>
+        </form>
+        </div>
+
+            @{
+                if (check == false)
+                {
+                    <form method="post" action="@Url.Action("SubscribeArticle", "Modder")" class="channel-form">
+                        <input type="hidden" name="articleId" value=@Model.article.id />
+                        <input type="hidden" name="userId" value=@Model.article.user.id />
+                        <button class="default-b" type="submit">Подписаться</button>
+                    </form>
+                }
+                else
+                {
+                    <form method="post" action="@Url.Action("UnSubscribeArticle", "Modder")" class="channel-form">
+                        <input type="hidden" name="articleId" value=@Model.article.id />
+                        <input type="hidden" name="userId" value=@Model.article.user.id />
+                        <button class="default-b" type="submit">Вы подписаны</button>
+                    </form>
+                }
+            }
+        
+            
+            
+        </div>
+        
+        <h3 class="textt">@Model.article.title</h3>
+        @{
+            string formattedDate = Convert.ToDateTime(Model.article.date).ToString("d MMMM yyy, в HH:mm", new CultureInfo("ru-RU"));
+        }
+        
+        
+        <div class="texttt">@formattedDate</div>
+        @Html.Raw(@Model.article.content)
+
+        <div style="display: flex; justify-content: space-between;">
+            <form method="get" asp-action="Decision" asp-controller="Modder">
+                <input type="hidden" name="articleId" value=@Model.article.id />
+                <input type="hidden" name="dec" value="false" />
+                <button class="decine-button" style="margin-left: auto;" type="submit">Отклонить</button>
+            </form>
+
+            <form method="get" asp-action="Decision" asp-controller="Modder">
+                <input type="hidden" name="articleId" value=@Model.article.id />
+                <input type="hidden" name="dec" value="true" />
+                <button class="approve-button" style="margin-right: auto;" type="submit">Добавить</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+
+</script>
+
+
+

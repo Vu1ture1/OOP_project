@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace MyApp.Models
 {
@@ -8,7 +9,7 @@ namespace MyApp.Models
         {
             title = string.Empty;
 
-            user_id = default(int);
+            user = new User();
 
             content = string.Empty;
 
@@ -18,14 +19,20 @@ namespace MyApp.Models
 
             status = false;
 
+            likes = 0;
+
+            comments = new List<Comment>();
+
             categories = new List<Category>();
         }
 
         [Key]
         public int id { get; set; }
-        public int user_id {  get; set; }
+        public User user {  get; set; }
         public string title { get; set; }
 
+        public List<Comment> comments { get; set; }
+        public int likes { get; set; }
         public bool status {  get; set; }
         public List<Category> categories { get; set; }
 

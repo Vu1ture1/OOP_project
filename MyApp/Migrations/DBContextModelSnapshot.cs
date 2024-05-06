@@ -38,6 +38,9 @@ namespace MyApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("likes")
+                        .HasColumnType("int");
+
                     b.Property<string>("path_to_corer")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -49,10 +52,12 @@ namespace MyApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("user_id")
+                    b.Property<int>("userid")
                         .HasColumnType("int");
 
                     b.HasKey("id");
+
+                    b.HasIndex("userid");
 
                     b.ToTable("Articles");
                 });
@@ -97,6 +102,37 @@ namespace MyApp.Migrations
                     b.ToTable("Category");
                 });
 
+            modelBuilder.Entity("MyApp.Models.Comment", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int?>("Articleid")
+                        .HasColumnType("int");
+
+                    b.Property<string>("context")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("created")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("creatorid")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("Articleid");
+
+                    b.HasIndex("creatorid");
+
+                    b.ToTable("Comment");
+                });
+
             modelBuilder.Entity("MyApp.Models.User", b =>
                 {
                     b.Property<int>("id")
@@ -104,6 +140,17 @@ namespace MyApp.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("Liked_articles")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Userid")
+                        .HasColumnType("int");
+
+                    b.Property<string>("channelname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("password")
                         .IsRequired()
@@ -113,9 +160,8 @@ namespace MyApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("serialize_article_ids")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("subscribers_num")
+                        .HasColumnType("int");
 
                     b.Property<int>("user_info_id")
                         .HasColumnType("int");
@@ -129,6 +175,8 @@ namespace MyApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
+
+                    b.HasIndex("Userid");
 
                     b.HasIndex("user_info_id");
 
@@ -160,6 +208,17 @@ namespace MyApp.Migrations
                     b.ToTable("UserInfo");
                 });
 
+            modelBuilder.Entity("MyApp.Models.Article", b =>
+                {
+                    b.HasOne("MyApp.Models.User", "user")
+                        .WithMany("channel_articles")
+                        .HasForeignKey("userid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("user");
+                });
+
             modelBuilder.Entity("MyApp.Models.ArticleRequest", b =>
                 {
                     b.HasOne("MyApp.Models.Article", "article")
@@ -178,8 +237,27 @@ namespace MyApp.Migrations
                         .HasForeignKey("Articleid");
                 });
 
+            modelBuilder.Entity("MyApp.Models.Comment", b =>
+                {
+                    b.HasOne("MyApp.Models.Article", null)
+                        .WithMany("comments")
+                        .HasForeignKey("Articleid");
+
+                    b.HasOne("MyApp.Models.User", "creator")
+                        .WithMany()
+                        .HasForeignKey("creatorid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("creator");
+                });
+
             modelBuilder.Entity("MyApp.Models.User", b =>
                 {
+                    b.HasOne("MyApp.Models.User", null)
+                        .WithMany("my_subscribes")
+                        .HasForeignKey("Userid");
+
                     b.HasOne("MyApp.Models.UserInfo", "user_info")
                         .WithMany()
                         .HasForeignKey("user_info_id")
@@ -192,6 +270,15 @@ namespace MyApp.Migrations
             modelBuilder.Entity("MyApp.Models.Article", b =>
                 {
                     b.Navigation("categories");
+
+                    b.Navigation("comments");
+                });
+
+            modelBuilder.Entity("MyApp.Models.User", b =>
+                {
+                    b.Navigation("channel_articles");
+
+                    b.Navigation("my_subscribes");
                 });
 #pragma warning restore 612, 618
         }

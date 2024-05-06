@@ -44,7 +44,7 @@
         }
 
         .form-control {
-            width: 200px; /* Фиксированная ширина */
+            width: 350px; /* Фиксированная ширина */
             max-width: 100%; /* Ширина не будет превышать 100% от родительского элемента */
             display: block;
             
@@ -141,7 +141,7 @@
             
             
             <span class="info-label">Введите заголовок статьи:</span>
-            <input name="title" type="text" id="inputName" class="form-control" placeholder="Article name" required>
+            <input name="title" type="text" id="inputName" class="form-control" placeholder="Article name (10char minimum)" pattern=".{10,}" required>
             <span class="info-label">Загрузите обложку статьи(необязательно):</span>
 
             <div class="divv">

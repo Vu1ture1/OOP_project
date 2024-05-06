@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v8.0": {
       "MyApp/1.0.0": {
         "dependencies": {
+          "Humanizer.Core.ru": "2.14.1",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "8.0.3",
           "Microsoft.EntityFrameworkCore": "8.0.3",
           "Microsoft.EntityFrameworkCore.SqlServer": "8.0.3",
