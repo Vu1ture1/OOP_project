@@ -36,7 +36,11 @@
         }
     }
 
+    string next_b = (string)ViewData["PageNext"];
 
+    string back_b = (string)ViewData["PageBack"];
+
+    int skip = (int)ViewData["skip"];
 }
 
 <!DOCTYPE html>
@@ -87,14 +91,6 @@
             margin-right: 20px;
         }
 
-        /* .article-button {
-                    background-color: #4CAF50;
-                    color: white;
-                    text-decoration: none;
-                    position: absolute;
-
-                }
-         */
         .article-button {
             position: absolute; /* Абсолютное позиционирование */
             bottom: 20px; /* Расстояние от нижнего края */
@@ -176,10 +172,53 @@
             height: 50px; /* Высота должна соответствовать высоте иконки */
         }
 
+        .default-b {
+            border: 2px solid transparent; /* Прозрачная граница в обычном состоянии */
+            background-color: transparent; /* Прозрачный фон в обычном состоянии */
+            color: #000; /* Цвет текста */
+            padding: 5px 10px; /* Отступы вокруг текста */
+            font-size: 20px; /* Размер шрифта */
+            transition: all 0.1s ease; /* Плавность перехода */
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+            .default-b-b:hover {
+                border-color: #000; /* Черная граница при наведении */
+                background-color: rgba(0, 0, 0, 0.1); /* Затемнение фона при наведении */
+                color: black;
+                transform: translate(1px, 1px);
+            }
+
+        .button-container {
+            width: 100%;
+            overflow: hidden; /* Решает проблему с просачивающимися float элементами */
+        }
+
+        .left {
+            float: left; /* Кнопка "Назад" будет выровнена слева */
+        }
+
+        .right {
+            float: right; /* Кнопка "Дальше" будет выровнена справа */
+        }
+
     </style>
 </head>
 <body>
     <h2 style="margin-bottom: 20px; font-size: 25px;">Рандомные статьи: </h2>
+    <div style="margin-bottom: 15px;" class="button-container">
+        
+        <form method="get" asp-controller="Home" asp-action="Back">
+            <input type="hidden" name="skip" value=@skip/>
+            <button type="submit" class="default-b left"><i class="fa-solid fa-arrow-left"></i> Назад</button>
+        </form>
+        
+        <form method="get" asp-controller="Home" asp-action="Next">
+            <input type="hidden" name="skip" value=@skip />
+            <button type="submit" class="default-b">Дальше <i class="fa-solid fa-arrow-right"></i></button>
+        </form>
+    </div>
 
     @{
         if (Model.Count == 0)
@@ -196,10 +235,10 @@
 
 
                         <div class="channel-info">
-                            <img class="avatar" src=@article.user.path_to_icon alt="Изображение канала">
+                            <img class="avatar" src=@article.user.path_to_channel_icon alt="Изображение канала">
 
-                            <form class="channel-form" method="post" action="@Url.Action("", "")" class="channel-form">
-                                <input type="hidden" name="user_id" value=@article.user.id />
+                            <form class="channel-form" method="post" action="@Url.Action("ViewChannel", "Access")" class="channel-form">
+                                <input type="hidden" name="userId" value=@article.user.id />
                                 <div>
 
                                     @{

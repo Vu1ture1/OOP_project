@@ -30,6 +30,34 @@ build_property._RazorSourceGeneratorDebug =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjZXNzXEFjY291bnQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/repos/MyApp/MyApp/Views/Access/ChangeChannelname.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjZXNzXENoYW5nZUNoYW5uZWxuYW1lLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/repos/MyApp/MyApp/Views/Access/ChangeDesChannel.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjZXNzXENoYW5nZURlc0NoYW5uZWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/repos/MyApp/MyApp/Views/Access/ChangeEmail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjZXNzXENoYW5nZUVtYWlsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/repos/MyApp/MyApp/Views/Access/ChangeUsername.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjZXNzXENoYW5nZVVzZXJuYW1lLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/repos/MyApp/MyApp/Views/Access/Channel.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjZXNzXENoYW5uZWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/repos/MyApp/MyApp/Views/Access/ChannelHeader.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjZXNzXENoYW5uZWxIZWFkZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/repos/MyApp/MyApp/Views/Access/ChannelIcon.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjZXNzXENoYW5uZWxJY29uLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/repos/MyApp/MyApp/Views/Access/Icon.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjZXNzXEljb24uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -40,6 +68,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/repos/MyApp/MyApp/Views/Access/Registration.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjZXNzXFJlZ2lzdHJhdGlvbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/repos/MyApp/MyApp/Views/Access/ViewChannel.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjZXNzXFZpZXdDaGFubmVsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/repos/MyApp/MyApp/Views/Article/Index.cshtml]

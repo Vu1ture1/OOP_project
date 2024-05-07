@@ -25,15 +25,48 @@ namespace MyApp.Controllers
             context = con;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int skip)
         {
-            IEnumerable<Article> Articles = context.Articles.Include(com => com.comments).Include(cat => cat.categories).Include(t => t.user).Include(a => a.user.user_info).Where(a => a.status == true).Take(30).ToList();
+            IEnumerable<Article> Articles;
 
+            Articles = context.Articles.Include(com => com.comments).Include(cat => cat.categories).Include(t => t.user).Include(a => a.user.user_info).Where(a => a.status == true).OrderByDescending(e => e.id).Skip((skip * 10)).Take(10).ToList();
+
+            if (Articles.Count() != 10)
+            {
+                skip = 0;
+            }
+
+            ViewData["skip"] = skip;
+            
             return View(Articles);
+        }
+
+        public IActionResult Next(int skip)
+        {
+            skip++;
+            
+            return RedirectToAction("Index", "Home", new { skip = skip });
+        }
+
+        public IActionResult Back(int skip)
+        {
+            if (skip == 0) 
+            {
+                return RedirectToAction("Index", "Home", new { skip = skip });
+            }
+
+            skip--;
+            
+            return RedirectToAction("Index", "Home", new { skip = skip });
         }
 
         public IActionResult CreateArticle() 
         {
+            if (HttpContext.User.Identity.IsAuthenticated == false)
+            {
+                return RedirectToAction("Login", "Access");
+            }
+
             return RedirectToAction("Index", "ArticleController");
         }
 

@@ -1,0 +1,167 @@
+﻿@using Microsoft.AspNetCore.Mvc;
+@using MyApp.DataBaseFolder;
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Authentication;
+@using Microsoft.AspNetCore.Authentication.Cookies;
+@using MyApp.Models;
+@using Microsoft.AspNetCore.Razor.Language.Intermediate;
+@using Microsoft.EntityFrameworkCore;
+
+@{
+    if (Context.User.Identity.IsAuthenticated == false)
+    {
+        Layout = "_Layout";
+    }
+    else
+    {
+        List<Claim> cl = Context.User.Claims.ToList();
+
+        if (cl[1].Value == "user")
+        {
+            Layout = "/Views/Shared/layouts/_Layout_user.cshtml";
+        }
+        else if (cl[1].Value == "modder")
+        {
+            Layout = "/Views/Shared/layouts/_Layout_modder.cshtml";
+        }
+        else if (Model.user_role == "admin")
+        {
+            //Layout = "/Views/Shared/layouts/_Layout_test.cshtml"; тут для админа
+        }
+    }
+}
+
+<head>
+    <style>
+        body {
+            padding-top: 70px; /* Устанавливаем отступ со всех сторон */
+        }
+
+        .profile-container {
+            width: 750px;
+            height: auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            text-align: left; /* Выравниваем текст по левому краю */
+            margin: 0 auto;
+        }
+
+        .default-b {
+            border: 2px solid transparent; /* Прозрачная граница в обычном состоянии */
+            background-color: transparent; /* Прозрачный фон в обычном состоянии */
+            color: #000; /* Цвет текста */
+            padding: 5px 10px; /* Отступы вокруг текста */
+            font-size: 20px; /* Размер шрифта */
+            transition: all 0.1s ease; /* Плавность перехода */
+
+            display: block; /* Блочное отображение */
+            margin-top: 20px;
+        }
+
+            .default-b:hover {
+                border-color: #000; /* Черная граница при наведении */
+                background-color: rgba(0, 0, 0, 0.1); /* Затемнение фона при наведении */
+                transform: translate(1px, 1px);
+            }
+
+        /* CSS для стилизации кнопки загрузки файлов */
+        .custom-file-upload {
+            border: 2px solid transparent; /* Прозрачная граница в обычном состоянии */
+            background-color: transparent; /* Прозрачный фон в обычном состоянии */
+            color: #000; /* Цвет текста */
+            padding: 5px 10px; /* Отступы вокруг текста */
+            font-size: 20px; /* Размер шрифта */
+            transition: all 0.1s ease; /* Плавность перехода */
+
+            margin-bottom: 20px;
+        }
+
+            .custom-file-upload:hover {
+                border-color: #000; /* Черная граница при наведении */
+                background-color: rgba(0, 0, 0, 0.1); /* Затемнение фона при наведении */
+                transform: translate(1px, 1px);
+            }
+
+        span {
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+
+<body>
+
+
+    @* <form action="Upload" method="post" enctype="multipart/form-data">
+    <label for="fileUpload">Загрузите картинку профиля:</label>
+    <input type="file" id="fileUpload" name="fileUpload" accept=".png">
+    <button type="submit">Загрузить</button>
+    </form> *@
+
+    <!-- Ваша форма с измененным внешним видом для загрузки файлов -->
+    @* <form action="Upload" method="post" enctype="multipart/form-data">
+    <label for="fileUpload" class="default-b">
+    Загрузить файл
+    </label>
+    <input type="file" id="fileUpload" name="fileUpload" style="display: none;" />
+
+    <button type="submit">Загрузить</button>
+    </form> *@
+
+    <!-- Ваша форма с кнопкой для загрузки файлов -->
+    <div class="profile-container">
+        <form action="ChannelUpload" method="post" enctype="multipart/form-data" onsubmit="return fileUp()">
+            <label for="fileUpload" class="custom-file-upload">
+                Выбрать файл .png
+            </label>
+            <input type="file" id="fileUpload" name="fileUpload" accept=".png" style="display: none;" />
+            <input id="fileUpload" name="option" value="1" accept=".png" style="display: none;" />
+            <!-- Элемент для отображения имени файла -->
+            <span class="" id="fileName"></span>
+            <button class="default-b" type="submit">Загрузить на сервер и установить в качестве иконки</button>
+        </form>
+
+
+        <form action="DefaultIcon" method="get" enctype="multipart/form-data">
+            <input id="fileUpload" name="option" value="2" accept=".png" style="display: none;" />
+            <!-- Элемент для отображения имени файла -->
+            <span class="" id="fileName"></span>
+            <button style="margin-top: 40px;" class="default-b">Сброс иконки</button>
+        </form>
+    </div>
+
+    <script>
+        // JavaScript для отображения имени файла
+        document.getElementById('fileUpload').addEventListener('change', function () {
+            // Получаем имя файла из пути файла
+            var fileName = "File: " + this.value.split('\\').pop();
+            // Обновляем текст элемента с именем файла
+            document.getElementById('fileName').textContent = fileName;
+        });
+
+    </script>
+
+    <script>
+        // JavaScript для отображения имени файла
+        document.getElementById('fileUpload').addEventListener('change', function () {
+            // Получаем имя файла из пути файла
+            var fileName = "File: " + this.value.split('\\').pop();
+            // Обновляем текст элемента с именем файла
+            document.getElementById('fileName').textContent = fileName;
+        });
+
+    </script>
+
+    <script>
+        function fileUp() {
+            if (document.getElementById('fileName').textContent === '') {
+                alert("Вы не выбрали файл");
+                return false;
+            } else {
+                return true;
+            }
+        }
+    </script>
+</body>
+

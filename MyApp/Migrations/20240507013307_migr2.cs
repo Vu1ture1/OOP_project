@@ -34,9 +34,13 @@ namespace MyApp.Migrations
                     username = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     channelname = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    salt = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     user_role = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Liked_articles = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     path_to_icon = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    path_to_channel_icon = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    path_to_channel_image = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    channel_description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     user_info_id = table.Column<int>(type: "int", nullable: false),
                     subscribers_num = table.Column<int>(type: "int", nullable: false),
                     Userid = table.Column<int>(type: "int", nullable: true)

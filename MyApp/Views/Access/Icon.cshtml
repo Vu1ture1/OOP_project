@@ -112,14 +112,22 @@
 
     <!-- Ваша форма с кнопкой для загрузки файлов -->
     <div class="profile-container">
-        <form action="Upload" method="post" enctype="multipart/form-data">
+        <form action="Upload" method="post" enctype="multipart/form-data" onsubmit="return fileUp()">
             <label for="fileUpload" class="custom-file-upload">
-                Загрузить файл
+                Выбрать файл .png
             </label>
             <input type="file" id="fileUpload" name="fileUpload" accept=".png" style="display: none;" />
             <!-- Элемент для отображения имени файла -->
             <span class="" id="fileName"></span>
-            <button class="default-b" type="submit">Загрузить на сервер и установить</button>
+            <button class="default-b" type="submit">Загрузить на сервер и установить в качестве иконки</button>
+           @*  <button style="margin-top: 40px;" class="default-b" asp-controller="Access" asp-action="DefaultIcon">Сброс иконки</button> *@
+        </form>
+
+        <form action="DefaultIcon" method="get" enctype="multipart/form-data">
+            <input id="fileUpload" name="option" value="1" accept=".png" style="display: none;" />
+            <!-- Элемент для отображения имени файла -->
+            <span class="" id="fileName"></span>
+            <button style="margin-top: 40px;" class="default-b" >Сброс иконки</button>
         </form>
     </div>
 
@@ -132,6 +140,28 @@
             document.getElementById('fileName').textContent = fileName;
         });
 
+    </script>
+
+    <script>
+        // JavaScript для отображения имени файла
+        document.getElementById('fileUpload').addEventListener('change', function () {
+            // Получаем имя файла из пути файла
+            var fileName = "File: " + this.value.split('\\').pop();
+            // Обновляем текст элемента с именем файла
+            document.getElementById('fileName').textContent = fileName;
+        });
+
+    </script>
+
+    <script>
+        function fileUp() {
+            if (document.getElementById('fileName').textContent === '') {
+                alert("Вы не выбрали файл");
+                return false;
+            } else {
+                return true;
+            }
+        }
     </script>
 </body>
 

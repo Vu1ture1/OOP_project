@@ -48,7 +48,7 @@
 
         .info-label {
             display: inline-block; /* Делаем элементы строчно-блочными */
-            width: 350px; /* Фиксированная ширина для меток */
+            width: 200px; /* Фиксированная ширина для меток */
             text-align: left; /* Выравниваем текст меток по правому краю */
             margin-right: 10px; /* Отступ справа от метки до поля */
             font-size: 20px;
@@ -57,10 +57,15 @@
 
         .info-content {
             display: inline-block; /* Делаем элементы строчно-блочными */
+            font-size: 20px;
+            
         }
 
         .username, .email, .fullname {
-            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 15px 0;
         }
 
         .default-b {
@@ -78,6 +83,28 @@
         }
 
             .default-b:hover {
+                border-color: #000; /* Черная граница при наведении */
+                background-color: rgba(0, 0, 0, 0.1); /* Затемнение фона при наведении */
+                transform: translate(1px, 1px);
+            }
+
+        .default-b-bet {
+            color: #000; /* Цвет текста */
+            padding: 5px 10px; /* Отступы вокруг текста */
+            font-size: 20px; /* Размер шрифта */
+            transition: all 1s; /* Плавность перехода */
+            overflow: hidden;
+            text-decoration: none;
+            cursor: pointer;
+
+            
+
+            display: block; /* Блочное отображение */
+            margin-left: auto; /* Автоматический отступ слева */
+            margin-right: auto; /* Автоматический отступ справа */
+        }
+
+            .default-b-bet:hover {
                 border-color: #000; /* Черная граница при наведении */
                 background-color: rgba(0, 0, 0, 0.1); /* Затемнение фона при наведении */
                 transform: translate(1px, 1px);
@@ -111,26 +138,66 @@
                 text-decoration: none; /* Убираем подчеркивание при наведении */
             }
 
+        .link-but-mod {
+            border: 2px solid transparent; /* Прозрачная граница в обычном состоянии */
+            background-color: transparent; /* Прозрачный фон в обычном состоянии */
+            text-decoration: none;
+            color: #000; /* Цвет текста */
+            padding: 5px 10px; /* Отступы вокруг текста */
+            font-size: 15px; /* Размер шрифта */
+            transition: all 0.1s ease; /* Плавность перехода */
+            display: inline-block; /* Измените на inline-block для контроля ширины */
+            text-align: center; /* Выравнивание текста по центру */
+            width: auto; /* Автоматическая ширина в зависимости от содержимого */
+            max-width: 300px;
+            display: block;
+            margin-right: auto; /* Автоматический отступ справа */
+        }
+
+            .link-but-mod:hover {
+                border-color: #000; /* Черная граница при наведении */
+                background-color: rgba(0, 0, 0, 0.1); /* Затемнение фона при наведении */
+                transform: translate(1px, 1px);
+                color: #000; /* Черный цвет текста при наведении */
+                text-decoration: none; /* Убираем подчеркивание при наведении */
+            }
+
         
             
     </style>
 </head>
 <body>
     
-        
+    
     <div class="profile-container">
         <img src=@path alt="Avatar" class="avatar"></img>
-        <a class="link-but" asp-area="" asp-controller="Access" asp-action="Icon"><i class="fa-solid fa-image"></i> Изменить фото профиля</a>
+        <a style="margin-bottom: 20px;" class="link-but" asp-area="" asp-controller="Access" asp-action="Icon"><i class="fa-solid fa-image"></i> Изменить фото профиля</a>
         
+        
+        <div class="username"><span class="info-label"><i class="fa-solid fa-user"></i> Имя пользователя:</span><span class="info-content">@Model.username</span>
+            <form asp-controller="Access" asp-action="ChangeUsername" method="get">
+                <input type="hidden" name="stat" value="not option">
+                
+                <button style="" class="link-but-mod text-dark" type="submit">Изменить имя пользователя</button>
+            </form>
+        </div>
+        
+        <div class="email"><span class="info-label"><i class="fa-solid fa-paper-plane"></i> Почта:</span><span class="info-content">@Model.user_info.email</span>
+            <form asp-controller="Access" asp-action="ChangeEmail" method="get">
+                <input type="hidden" name="stat" value="not option">
 
-        <div class="username"><span class="info-label"><i class="fa-solid fa-user"></i> Имя пользователя (username):</span><span class="info-content">@Model.username</span></div>
-        <div class="email"><span class="info-label"><i class="fa-solid fa-paper-plane"></i> Почта:</span><span class="info-content">@Model.user_info.email</span></div>
-        <div class="fullname"><span class="info-label"><i class="fa-solid fa-address-book"></i> Полное имя:</span><span class="info-content">@Model.user_info.firstname @Model.user_info.lastname</span></div>
+                <button style="" class="link-but-mod text-dark" type="submit">Сменить почту</button>
+            </form>
+        </div>
+        <div class="fullname"><span class="info-label"><i class="fa-solid fa-address-book"></i> Полное имя:</span><span class="info-content">Имя: @Model.user_info.firstname, Фамилия: @Model.user_info.lastname</span>
+        </div>
+        <a class="link-but text-dark" asp-area="" asp-controller="Article" asp-action="Index"><i class="fas fa-plus-square"></i> Написать статью</a>
         @if (Model.user_role == "modder")
         {
             <a class="link-but text-dark" asp-area="" asp-controller="Modder" asp-action="Index"><i class="fa-solid fa-pen"></i> Модерировать статьи</a>
         }
-        <button class="default-b text-dark"><i class="fa-solid fa-list"></i> Открыть все статьи</button>
+        <a class="link-but text-dark" asp-area="" asp-controller="Access" asp-action="Channel"><i class="fa-solid fa-list"></i> Редактировать канал</a>
     </div>
 </body>
 </html>
+    

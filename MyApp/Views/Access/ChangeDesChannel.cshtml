@@ -1,0 +1,115 @@
+﻿@using Microsoft.AspNetCore.Mvc;
+@using MyApp.DataBaseFolder;
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Authentication;
+@using Microsoft.AspNetCore.Authentication.Cookies;
+@using MyApp.Models;
+@using Microsoft.AspNetCore.Razor.Language.Intermediate;
+@using Microsoft.EntityFrameworkCore;
+@using Humanizer;
+@using System.Globalization;
+
+@model User
+
+@{
+
+    ViewData["Title"] = "Home Page";
+
+    if (Context.User.Identity.IsAuthenticated == false)
+    {
+        Layout = "_Layout";
+    }
+    else
+    {
+        List<Claim> cl = Context.User.Claims.ToList();
+
+        if (cl[1].Value == "user")
+        {
+            Layout = "/Views/Shared/layouts/_Layout_user.cshtml";
+        }
+        else if (cl[1].Value == "modder")
+        {
+            Layout = "/Views/Shared/layouts/_Layout_modder.cshtml";
+        }
+        else if (Model.user_role == "admin")
+        {
+            //Layout = "/Views/Shared/layouts/_Layout_test.cshtml"; тут для админа
+        }
+    }
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
+
+    <title>Signin Template for Bootstrap</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sign-in/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="signin.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
+    <script src="https://kit.fontawesome.com/77e4e26825.js" crossorigin="anonymous"></script>
+
+    <style>
+        body {
+            padding-top: 70px; /* Устанавливаем отступ со всех сторон */
+        }
+
+        .form-control {
+            width: 500px; /* Фиксированная ширина */
+            max-width: 100%; /* Ширина не будет превышать 100% от родительского элемента */
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+
+        .default-b {
+            border: 2px solid transparent; /* Прозрачная граница в обычном состоянии */
+            background-color: transparent; /* Прозрачный фон в обычном состоянии */
+            color: #000; /* Цвет текста */
+            padding: 5px 10px; /* Отступы вокруг текста */
+            font-size: 20px; /* Размер шрифта */
+            transition: all 0.1s ease; /* Плавность перехода */
+        }
+
+            .default-b:hover {
+                border-color: #000; /* Черная граница при наведении */
+                background-color: rgba(0, 0, 0, 0.1); /* Затемнение фона при наведении */
+                transform: translate(1px, 1px);
+            }
+
+        .form-signin > * {
+            margin-bottom: 10px; /* Добавляет отступ снизу для всех элементов внутри .form-signin */
+        }
+    </style>
+</head>
+
+<body class="text-center">
+    <form class="form-signin" asp-action="ChangeDesChannelProccess" method="post">
+        <i class="fa-solid fa-address-card fa-3x"></i>
+        <h1 class="h3 mb-3 font-weight-normal">Изменение описание канала</h1>
+        <textarea id="textarea1" name="description" type="text" class="form-control" placeholder="Description" required></textarea>
+        <button class="default-b text-dark" type="submit" value="send">Изменить</button>
+
+    </form>
+</body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var channelName = @Json.Serialize(Model.channel_description);
+        document.getElementById('textarea1').value = channelName;
+    });
+</script>
+</html>
+    

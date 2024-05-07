@@ -175,7 +175,12 @@
             border: 1px solid #ccc;
             display: flex;
             align-items: center;
+            transition: all 0.4s ease; /* Плавность перехода */
         }
+
+            .profile-container-comments-not-signin:hover{
+                background-color: rgba(0, 0, 0, 0.1); /* Затемнение фона при наведении */
+            }
 
         .channel-form-nots {
             display: flex;
@@ -200,7 +205,7 @@
 
             .default-b-nots:hover {
                 border-color: #000; /* Черная граница при наведении */
-                background-color: rgba(0, 0, 0, 0.1); /* Затемнение фона при наведении */
+                background-color: white;
                 color: black;
                 transform: translate(1px, 1px);
             }
@@ -236,11 +241,11 @@
     <div class="profile-container">
 
         <div class="channel-info">
-            <img class="avatar" src=@Model.user.path_to_icon alt="Изображение канала">
+            <img class="avatar" src=@Model.user.path_to_channel_icon alt="Изображение канала">
 
             <div>
-                <form class="channel-form" method="post" action="@Url.Action("", "")" class="channel-form">
-                    <input type="hidden" name="user_id" value=@Model.user.id />
+                <form class="channel-form" method="post" action="@Url.Action("ViewChannel", "Access")" class="channel-form">
+                    <input type="hidden" name="userId" value=@Model.user.id />
                     <div>
 
                         <a href="javascript:;" onclick="this.parentNode.parentNode.submit();" class="channel-link">@Model.user.channelname</a>
@@ -344,7 +349,7 @@
             }
             else
             {
-                <div class="channel-form"><button class="default-b" asp-controller="Access" asp-action="Login"><i class="fa-regular fa-thumbs-up"></i>@FormatNumber(Model.likes)</button></div>
+                <div class="channel-form"><a class="default-b" asp-controller="Access" asp-action="Login" type="button"><i class="fa-regular fa-thumbs-up"></i>@FormatNumber(Model.likes)</a></div>
             }
         }
         
@@ -378,7 +383,7 @@
                     <div class="channel-form-nots"><a class="default-b-nots" asp-area="" asp-controller="Access" asp-action="Login">Войти</a></div>
                 </div>
 
-            
+
             }
 
         }
@@ -389,6 +394,8 @@
         <div style="margin-top: 20px;">
         
         @{
+            Model.comments.Reverse();
+            
             foreach (Comment com in Model.comments)
             {
                 <div style="margin-bottom: 30px;">
@@ -396,8 +403,8 @@
                     <img class="avatar_com" src=@com.creator.path_to_icon alt="Изображение канала">
 
                     <div>
-                        <form class="channel-form-com" method="post" action="@Url.Action("", "")" class="channel-form">
-                            <input type="hidden" name="user_id" value=@Model.user.id />
+                                <form class="channel-form-com" method="post" action="@Url.Action("ViewChannel", "Access")" class="channel-form">
+                            <input type="hidden" name="userId" value=@Model.user.id />
                             <div>
                                 <a href="javascript:;" onclick="this.parentNode.parentNode.submit();" class="channel-link">@com.creator.username</a>
 

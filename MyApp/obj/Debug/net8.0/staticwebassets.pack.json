@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets\\MyApp.bundle.scp.css"
     },
     {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\1111.png",
+      "PackagePath": "staticwebassets\\Article_png\\1111.png"
+    },
+    {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\1200px-Leopard_2A6._Заглавный_скриншот.png",
       "PackagePath": "staticwebassets\\Article_png\\1200px-Leopard_2A6._Заглавный_скриншот.png"
     },
@@ -15,6 +19,18 @@
     {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\base.png",
       "PackagePath": "staticwebassets\\Article_png\\base.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\footer.png",
+      "PackagePath": "staticwebassets\\Article_png\\footer.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\Снимок экрана 2024-03-18 061545.png",
+      "PackagePath": "staticwebassets\\Article_png\\Снимок экрана 2024-03-18 061545.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\Снимок экрана 2024-04-15 030721.png",
+      "PackagePath": "staticwebassets\\Article_png\\Снимок экрана 2024-04-15 030721.png"
     },
     {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\Снимок экрана 2024-05-05 043336.png",
@@ -29,12 +45,40 @@
       "PackagePath": "staticwebassets\\Article_png\\Снимок экрана 2024-05-06 021338.png"
     },
     {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\Снимок экрана 2024-05-06 135051.png",
+      "PackagePath": "staticwebassets\\Article_png\\Снимок экрана 2024-05-06 135051.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\Снимок экрана 2024-05-08 004833.png",
+      "PackagePath": "staticwebassets\\Article_png\\Снимок экрана 2024-05-08 004833.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\Снимок экранацвйцв 2024-05-01 191035.png",
+      "PackagePath": "staticwebassets\\Article_png\\Снимок экранацвйцв 2024-05-01 191035.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Avatar_png\\1200px-Leopard_2A6._Заглавный_скриншот.png",
+      "PackagePath": "staticwebassets\\Avatar_png\\1200px-Leopard_2A6._Заглавный_скриншот.png"
+    },
+    {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Avatar_png\\517b39a04c824bbf97c647dbe71948c1.png",
       "PackagePath": "staticwebassets\\Avatar_png\\517b39a04c824bbf97c647dbe71948c1.png"
     },
     {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Avatar_png\\blank-profile-picture-973460_1280.png",
       "PackagePath": "staticwebassets\\Avatar_png\\blank-profile-picture-973460_1280.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Avatar_png\\Снимок экрана 2024-05-06 135051.png",
+      "PackagePath": "staticwebassets\\Avatar_png\\Снимок экрана 2024-05-06 135051.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Avatar_png\\Снимок экрана 2024-05-06 135120.png",
+      "PackagePath": "staticwebassets\\Avatar_png\\Снимок экрана 2024-05-06 135120.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Avatar_png\\Снимок экранацвйцв 2024-05-01 191035.png",
+      "PackagePath": "staticwebassets\\Avatar_png\\Снимок экранацвйцв 2024-05-01 191035.png"
     },
     {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\1200px-Leopard_2A6._Заглавный_скриншот.png",
@@ -67,6 +111,18 @@
     {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\Снимок экрана 2024-05-05 195705.png",
       "PackagePath": "staticwebassets\\Image\\Снимок экрана 2024-05-05 195705.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\Снимок экрана 2024-05-06 135051.png",
+      "PackagePath": "staticwebassets\\Image\\Снимок экрана 2024-05-06 135051.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\Снимок экрана 2024-05-06 135108.png",
+      "PackagePath": "staticwebassets\\Image\\Снимок экрана 2024-05-06 135108.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\Снимок экрана 2024-05-06 135120.png",
+      "PackagePath": "staticwebassets\\Image\\Снимок экрана 2024-05-06 135120.png"
     },
     {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\css\\site.css",

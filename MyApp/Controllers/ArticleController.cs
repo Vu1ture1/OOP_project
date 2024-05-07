@@ -25,6 +25,11 @@ namespace MyApp.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            if (HttpContext.User.Identity.IsAuthenticated == false)
+            {
+                return RedirectToAction("Login", "Access");
+            }
+
             return View();
         }
 
@@ -93,6 +98,11 @@ namespace MyApp.Controllers
         [HttpPost]
         public IActionResult CreateRequest(string categories, string title, IFormFile fileUpload, string input)
         {
+            if (HttpContext.User.Identity.IsAuthenticated == false)
+            {
+                return RedirectToAction("Login", "Access");
+            }
+
             var filepath = "";
 
             //C:\repos\MyApp\MyApp\wwwroot\Image
@@ -205,6 +215,11 @@ namespace MyApp.Controllers
 
         public ActionResult UploadImage(List<IFormFile> files) 
         {
+            if (HttpContext.User.Identity.IsAuthenticated == false)
+            {
+                return RedirectToAction("Login", "Access");
+            }
+
             var filepath = "";
 
             foreach (IFormFile photo in Request.Form.Files) 
@@ -269,9 +284,38 @@ namespace MyApp.Controllers
             return View(Article);
         }
 
+        public IActionResult DeleteArticle(int articleId) 
+        {
+            if (HttpContext.User.Identity.IsAuthenticated == false)
+            {
+                return RedirectToAction("Login", "Access");
+            }
+
+            ClaimsPrincipal ClUser = HttpContext.User;
+
+            List<Claim> cl = ClUser.Claims.ToList();
+
+            var user = context.Users.Include(u => u.user_info).Include(a => a.channel_articles).ThenInclude(u => u.comments).ThenInclude(u => u.creator).Include(a => a.channel_articles).ThenInclude(u => u.categories).Include(sub => sub.my_subscribes).Where<User>(var => var.username == cl[0].Value && var.user_info.email == cl[2].Value).FirstOrDefault();
+
+            var Article = context.Articles.Include(com => com.comments).ThenInclude(c => c.creator).Include(cat => cat.categories).Include(t => t.user).Include(a => a.user.user_info).Where<Article>(var => var.id == articleId).FirstOrDefault();
+
+            user.channel_articles.Remove(Article);
+
+            context.Articles.Remove(Article);
+
+            context.SaveChanges();
+
+            return RedirectToAction("Channel", "Access");
+        }
+
         [HttpPost]
         public IActionResult SubscribeArticle(int articleId, int userId)
         {
+            if (HttpContext.User.Identity.IsAuthenticated == false)
+            {
+                return RedirectToAction("Login", "Access");
+            }   
+
             ClaimsPrincipal ClUser = HttpContext.User;
 
             List<Claim> cl = ClUser.Claims.ToList();
@@ -292,6 +336,11 @@ namespace MyApp.Controllers
         [HttpPost]
         public IActionResult UnSubscribeArticle(int articleId, int userId)
         {
+            if (HttpContext.User.Identity.IsAuthenticated == false)
+            {
+                return RedirectToAction("Login", "Access");
+            }
+
             ClaimsPrincipal ClUser = HttpContext.User;
 
             List<Claim> cl = ClUser.Claims.ToList();
@@ -312,6 +361,11 @@ namespace MyApp.Controllers
         [HttpPost]
         public IActionResult CommentCreation(string con, int articleId) 
         {
+            if (HttpContext.User.Identity.IsAuthenticated == false)
+            {
+                return RedirectToAction("Login", "Access");
+            }
+
             var Article = context.Articles.Include(com => com.comments).Include(cat => cat.categories).Include(t => t.user).Include(a => a.user.user_info).Where<Article>(var => var.id == articleId).FirstOrDefault();
 
             ClaimsPrincipal ClUser = HttpContext.User;
@@ -326,7 +380,7 @@ namespace MyApp.Controllers
 
             comment.creator = user_viewer;
 
-            comment.created = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+            comment.created = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
 
             Article.comments.Add(comment);
 
@@ -338,6 +392,11 @@ namespace MyApp.Controllers
         [HttpPost]
         public IActionResult Like(int articleId)
         {
+            if (HttpContext.User.Identity.IsAuthenticated == false)
+            {
+                return RedirectToAction("Login", "Access");
+            }
+
             ClaimsPrincipal ClUser = HttpContext.User;
 
             List<Claim> cl = ClUser.Claims.ToList();
@@ -356,8 +415,13 @@ namespace MyApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult UnLike(int articleId)
+        public IActionResult UnLike(int articleId)  
         {
+            if (HttpContext.User.Identity.IsAuthenticated == false)
+            {
+                return RedirectToAction("Login", "Access");
+            }
+
             ClaimsPrincipal ClUser = HttpContext.User;
 
             List<Claim> cl = ClUser.Claims.ToList();

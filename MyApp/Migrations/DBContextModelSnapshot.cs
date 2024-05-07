@@ -148,6 +148,10 @@ namespace MyApp.Migrations
                     b.Property<int?>("Userid")
                         .HasColumnType("int");
 
+                    b.Property<string>("channel_description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("channelname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -156,7 +160,19 @@ namespace MyApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("path_to_channel_icon")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("path_to_channel_image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("path_to_icon")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("salt")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

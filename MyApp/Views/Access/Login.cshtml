@@ -72,12 +72,20 @@
         <h1 class="h3 mb-3 font-weight-normal">Вход</h1>
         <input name="username" type="text" id="inputEmail" class="form-control" placeholder="Username" required autofocus maxlength="20">
         <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-        <div class="checkbox mb-3">
-            <label>
-                <input type="checkbox" value="remember-me"> Запомнить меня
-            </label>
-        </div>
+        <div style="margin-left: auto; margin-right: auto; display: block;"><input type="checkbox" onclick="togglePasswordVisibility()"> Показать пароль</div>
+        
         <button class="default-b text-dark" type="submit" value="send">Войти</button>
     </form>
 </body>
+
+<script>
+    function togglePasswordVisibility() {
+        var passwordInput = document.getElementById("inputPassword");
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+        } else {
+            passwordInput.type = "password";
+        }
+    }
+</script>
 </html>

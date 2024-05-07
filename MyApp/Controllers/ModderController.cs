@@ -22,6 +22,11 @@ namespace MyApp.Controllers
 
         public IActionResult Index()
         {
+            if (HttpContext.User.Identity.IsAuthenticated == false) 
+            {
+                return RedirectToAction("Login", "Access");
+            }
+            
             IEnumerable < ArticleRequest > ArticleReques = context.Requests.Include(u => u.article).Include(com => com.article.comments).Include(cat => cat.article.categories).Include(t => t.article.user).Include(a => a.article.user.user_info).Take(10).ToList();
 
             return View(ArticleReques);
@@ -29,6 +34,11 @@ namespace MyApp.Controllers
 
         public IActionResult ModdingArticle(int articleId)
         {
+            if (HttpContext.User.Identity.IsAuthenticated == false)
+            {
+                return RedirectToAction("Login", "Access");
+            }
+
             var art = context.Requests.Include(u => u.article).Include(com => com.article.comments).Include(cat => cat.article.categories).Include(t => t.article.user).Include(a => a.article.user.user_info).Where<ArticleRequest>(var => var.id == articleId).FirstOrDefault();
 
             ClaimsPrincipal ClUser = HttpContext.User;
@@ -53,6 +63,11 @@ namespace MyApp.Controllers
         [HttpPost]
         public IActionResult SubscribeArticle(int articleId, int userId)
         {
+            if (HttpContext.User.Identity.IsAuthenticated == false)
+            {
+                return RedirectToAction("Login", "Access");
+            }
+
             var art = context.Requests.Include(u => u.article).Include(com => com.article.comments).Include(cat => cat.article.categories).Include(t => t.article.user).Include(a => a.article.user.user_info).Where<ArticleRequest>(var => var.id == articleId).FirstOrDefault();
 
             ClaimsPrincipal ClUser = HttpContext.User;
@@ -75,6 +90,11 @@ namespace MyApp.Controllers
         [HttpPost]
         public IActionResult UnSubscribeArticle(int articleId, int userId)
         {
+            if (HttpContext.User.Identity.IsAuthenticated == false)
+            {
+                return RedirectToAction("Login", "Access");
+            }
+
             var art = context.Requests.Include(u => u.article).Include(com => com.article.comments).Include(cat => cat.article.categories).Include(t => t.article.user).Include(a => a.article.user.user_info).Where<ArticleRequest>(var => var.id == articleId).FirstOrDefault();
 
             ClaimsPrincipal ClUser = HttpContext.User;
@@ -96,6 +116,11 @@ namespace MyApp.Controllers
 
         public IActionResult Decision(string dec, int articleId) 
         {
+            if (HttpContext.User.Identity.IsAuthenticated == false)
+            {
+                return RedirectToAction("Login", "Access");
+            }
+
             var art = context.Requests.Include(u => u.article).Include(com => com.article.comments).Include(cat => cat.article.categories).Include(t => t.article.user).Include(a => a.article.user.user_info).Where<ArticleRequest>(var => var.id == articleId).FirstOrDefault();
 
             bool ch = bool.Parse(dec);

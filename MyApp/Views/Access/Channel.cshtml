@@ -1,0 +1,463 @@
+﻿@using Microsoft.AspNetCore.Mvc;
+@using MyApp.DataBaseFolder;
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Authentication;
+@using Microsoft.AspNetCore.Authentication.Cookies;
+@using MyApp.Models;
+@using Microsoft.AspNetCore.Razor.Language.Intermediate;
+@using Microsoft.EntityFrameworkCore;
+@using Humanizer;
+
+@model User;
+
+@{
+
+    ViewData["Title"] = "Home Page";
+
+    if (Context.User.Identity.IsAuthenticated == false)
+    {
+        Layout = "_Layout";
+    }
+    else
+    {
+        List<Claim> cl = Context.User.Claims.ToList();
+
+        if (cl[1].Value == "user")
+        {
+            Layout = "/Views/Shared/layouts/_Layout_user.cshtml";
+        }
+        else if (cl[1].Value == "modder")
+        {
+            Layout = "/Views/Shared/layouts/_Layout_modder.cshtml";
+        }
+        else if (cl[1].Value == "admin")
+        {
+            //Layout = "/Views/Shared/layouts/_Layout_test.cshtml"; тут для админа
+        }
+    }
+}
+
+<head>
+    <style>
+        body {
+            padding-top: 70px;
+        }
+
+        .grid-container {
+            display: grid;
+            /* grid-template-columns: repeat(4, 1fr); */ /* 3 статьи в одной строке */
+            gap: 40px; /* Отступ между статьями */
+            grid-template-columns: repeat(3, 1fr); /* Создает 4 колонки равного размера */
+            grid-auto-rows: minmax(100px, auto); /* Устанавливает минимальную высоту ячеек, но позволяет им растягиваться, если содержимое требует больше пространства */
+            align-items: stretch; /* Растягивает элементы, чтобы они занимали всю высоту ячейки */
+        }
+
+        .article-card {
+            position: relative;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            overflow: hidden;
+            height: 100%;
+            min-width: 350px;
+            min-height: 400px;
+            margin-bottom: 20px;
+        }
+
+            .article-card:hover .article-image {
+                transform: scale(1.02); /* Увеличивает изображение на 0.05% при наведении */
+            }
+
+        .user-card {
+            position: relative;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            min-height: 300px;
+            margin-bottom: 20px;
+        }
+
+            .user-card:hover .user-image {
+                transform: scale(1.02); /* Увеличивает изображение на 0.05% при наведении */
+            }
+
+        .button-form {
+            position: relative;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin-bottom: 20px;
+           /*  min-height: 60px; */
+        }
+
+        .for {
+            position: relative;
+            border: 0px solid #ccc;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            min-height: 300px;
+            margin-bottom: 20px;
+        }
+
+        .user-image{
+            width: 100%;
+            height: 200px;
+            border-top-left-radius: 20px; /* Закругление верхнего левого угла */
+            border-top-right-radius: 20px; /* Закругление верхнего правого угла */
+
+            object-fit: cover;
+
+            transition: transform 0.3s ease-in-out; /* Добавьте это для плавного перехода */
+        }
+
+        .article-image {
+            width: 100%;
+            height: 200px;
+            border-top-left-radius: 20px; /* Закругление верхнего левого угла */
+            border-top-right-radius: 20px; /* Закругление верхнего правого угла */
+
+            transition: transform 0.3s ease-in-out; /* Добавьте это для плавного перехода */
+        }
+
+        .article-title {
+            font-size: 0.95em;
+            margin-top: 10px;
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+        .article-button {
+            position: absolute; /* Абсолютное позиционирование */
+            bottom: 20px; /* Расстояние от нижнего края */
+            right: 20px; /* Положение по горизонтали */
+
+            border: 2px solid transparent; /* Прозрачная граница в обычном состоянии */
+            background-color: transparent; /* Прозрачный фон в обычном состоянии */
+            font-size: 20px; /* Размер шрифта */
+
+            color: black;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: all 0.1s ease; /* Плавность перехода */
+        }
+
+            /* Дополнительные стили для .article-button при наведении */
+            .article-button:hover {
+                border-color: black; /* Черная граница при наведении */
+                background-color: rgba(0, 0, 0, 0.1); /* Затемнение фона при наведении */
+                transform: translate(1px, 1px);
+            }
+
+
+        .article-delete-button {
+            position: absolute; /* Абсолютное позиционирование */
+            bottom: 20px; /* Расстояние от нижнего края */
+            left: 20px;
+
+            border: 2px solid transparent; /* Прозрачная граница в обычном состоянии */
+            background-color: transparent; /* Прозрачный фон в обычном состоянии */
+            font-size: 20px; /* Размер шрифта */
+
+            color: black;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: all 0.1s ease; /* Плавность перехода */
+        }
+
+            /* Дополнительные стили для .article-button при наведении */
+            .article-delete-button:hover {
+                border-color: black; /* Черная граница при наведении */
+                
+                color: white;
+                background-color: red; /* Затемнение фона при наведении */
+                transform: translate(1px, 1px);
+            }
+
+
+        .channel-link {
+            color: black;
+            text-decoration: none; /* Убирает подчеркивание */
+            position: relative; /* Для точного позиционирования */
+        }
+
+            .channel-link:hover {
+                color: darkgray; /* Цвет при наведении (серый) */
+                text-decoration: none; /* Добавляет подчеркивание при наведении */
+            }
+
+        .avatar {
+            width: 8%;
+            height: 8%;
+            background-color: #f3f3f3;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .avatar-art {
+            width: 13%;
+            height: 13%;
+            background-color: #f3f3f3;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .channel-info {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+            margin-left: 20px;
+        }
+
+        .additional-text {
+            font-size: 0.8em;
+            color: #888;
+            position: absolute;
+            left: 15% + 10px;
+
+
+        }
+
+        
+
+
+        .channel-form {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Распределяет контент равномерно */
+            height: 50px; /* Высота должна соответствовать высоте иконки */
+        }
+
+        .default-b {
+            border: 2px solid transparent; /* Прозрачная граница в обычном состоянии */
+            background-color: transparent; /* Прозрачный фон в обычном состоянии */
+            color: #000; /* Цвет текста */
+            padding: 5px 10px; /* Отступы вокруг текста */
+            font-size: 20px; /* Размер шрифта */
+            transition: all 0.1s ease; /* Плавность перехода */
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        .default-b-b:hover {
+            border-color: #000; /* Черная граница при наведении */
+            background-color: rgba(0, 0, 0, 0.1); /* Затемнение фона при наведении */
+            color: black;
+            transform: translate(1px, 1px);
+        }
+
+        .default-sub {
+            border: 2px solid transparent; /* Прозрачная граница в обычном состоянии */
+            background-color: transparent; /* Прозрачный фон в обычном состоянии */
+            color: #000; /* Цвет текста */
+            padding: 5px 10px; /* Отступы вокруг текста */
+            transition: all 0.1s ease; /* Плавность перехода */
+            font-size: 15px;
+        }
+
+        .default-sub:hover {
+            border-color: #000; /* Черная граница при наведении */
+            background-color: rgba(0, 0, 0, 0.1); /* Затемнение фона при наведении */
+            color: black;
+            transform: translate(1px, 1px);
+        }
+
+        .button-container {
+            width: 100%;
+            overflow: hidden; /* Решает проблему с просачивающимися float элементами */
+        }
+
+        .left {
+            float: left; /* Кнопка "Назад" будет выровнена слева */
+        }
+
+        .right {
+            float: right; /* Кнопка "Дальше" будет выровнена справа */
+        }
+
+    </style>
+</head>
+
+@{
+    string GetSubscriberDeclension(int count)
+    {
+        int remainder = count % 100;
+        if (remainder >= 11 && remainder <= 19)
+        {
+            return "подписчиков";
+        }
+
+        remainder = count % 10;
+        switch (remainder)
+        {
+            case 1:
+                return "подписчик";
+            case 2:
+            case 3:
+            case 4:
+                return "подписчика";
+            default:
+                return "подписчиков";
+        }
+    }
+}
+
+<body>
+<div class="user-card">
+    <img class="user-image" src="@Model.path_to_channel_image" alt="Обложка канала">
+
+
+    <div class="channel-info">
+        <img class="avatar" src=@Model.path_to_channel_icon alt="Изображение канала">
+
+        <form class="channel-form" method="post" action="@Url.Action("", "")">
+            <input type="hidden" name="user_id" value=@Model.id />
+            <div>
+
+                @{
+                    string us = Model.channelname;
+                }
+
+                    <div>
+
+                        <a style="font-weight: 500; font-size: 20px;" class="channel-link">@us</a>
+
+                        @{
+                            string str = Model.subscribers_num.ToString() + " " + @GetSubscriberDeclension(Model.subscribers_num);
+                        }
+
+                        
+
+                        <p class="additional-text">@str</p>
+
+                        
+                        
+                    </div>
+
+                    
+                    
+                
+            </div>
+
+                
+        </form>
+
+            @* <form method="post" action="@Url.Action("Subscribe", "Access")" style="display: flex; margin-left: auto; margin-right: 20px;">
+                <input type="hidden" name="userId" value=@Model.id />
+                <button style="width: 200px; height: 45px; border-radius: 10px;" class="default-sub" type="submit">Подписаться</button>
+            </form> *@
+
+
+    </div>
+
+    <p style="margin-top: 10px; margin-right: auto; margin-left: 30px; font-size: 17px; width: 95%; word-wrap: break-word;">@Model.channel_description</p>
+
+</div>
+
+    <div class="button-form">
+        <form method="post" action="@Url.Action("ChangeDesChannel", "Access")" style="display: flex; margin-left: auto; margin-right: 20px;">
+            <input type="hidden" />
+            <button style="width: 220px; height: 45px; border-radius: 10px; margin: 10px;" class="default-sub" type="submit">Изменить описание канала</button>
+        </form>
+        
+        <form method="post" action="@Url.Action("ChangeChannelname", "Access")" style="display: flex; margin-left: auto; margin-right: 20px;">
+        <input type="hidden" />
+        <button style="width: 220px; height: 45px; border-radius: 10px; margin: 10px;" class="default-sub" type="submit">Изменить имя канала</button>
+        </form>
+
+        <form method="post" action="@Url.Action("ChannelHeader", "Access")" style="display: flex; margin-left: auto; margin-right: 20px;">
+            <input type="hidden"/>
+            <button style="width: 220px; height: 45px; border-radius: 10px; margin: 10px;" class="default-sub" type="submit">Изменить шапку канала</button>
+        </form>
+
+        <form method="post" action="@Url.Action("ChannelIcon", "Access")" style="display: flex; margin-left: auto; margin-right: 20px;">
+            <input type="hidden"/>
+            <button style="width: 220px; height: 45px; border-radius: 10px; margin: 10px;" class="default-sub" type="submit">Изменить аватар канала</button>
+        </form>
+    </div>
+        
+<h2 style="margin-bottom: 20px;">Статьи канала:</h2>
+<div class="for">
+    @{
+        if (Model.channel_articles.Count == 0)
+        {
+                <div>Статей пока нет</div>
+            }
+            else
+            {
+                
+                Model.channel_articles.Reverse();
+                
+            
+            <div class="grid-container">
+                    @foreach (var article in Model.channel_articles)
+                {
+                    <div class="article-card">
+                        <img class="article-image" src="@article.path_to_corer" alt="Обложка статьи">
+
+
+                        <div class="channel-info">
+                                <img class="avatar-art" src=@article.user.path_to_channel_icon alt="Изображение канала">
+
+                                <form class="channel-form" method="post" action="@Url.Action("ViewChannel", "Access")" class="channel-form">
+                                <input type="hidden" name="userId" value=@article.user.id />
+                                <div>
+
+                                    @{
+                                        string uss = article.user.channelname;
+
+                                        if (uss.Length > 22)
+                                        {
+                                            uss = uss.Substring(0, 22);
+                                            uss += "...";
+                                        }
+                                    }
+                                    <a href="javascript:;" onclick="this.parentNode.parentNode.submit();" class="channel-link">@uss</a>
+
+                                    @{
+                                        string date = article.date;
+
+                                        DateTime date_conv = Convert.ToDateTime(date);
+
+                                        date = date_conv.Humanize(false);
+                                    }
+                                    <p class="additional-text">@date</p>
+                                </div>
+                            </form>
+                        </div>
+
+                        @{
+                            string title_ch = @article.title;
+
+                            if (title_ch.Length > 76)
+                            {
+                                title_ch = title_ch.Substring(0, 73);
+                                title_ch += "...";
+                            }
+                        }
+
+                        <h2 class="article-title">@title_ch</h2>
+
+                            <form method="get" asp-controller="Article" asp-action="DeleteArticle">
+                                <input type="hidden" name="articleId" value=@article.id />
+                                <button type="submit" class="article-delete-button">Удалить</button>
+                            </form>
+
+                        <form method="get" asp-controller="Article" asp-action="ViewArticle">
+                            <input type="hidden" name="articleId" value=@article.id />
+                            <button type="submit" class="article-button">Перейти</button>
+                        </form>
+
+                    </div>
+                }
+            </div>
+        }
+    }
+</div>
+</body>
