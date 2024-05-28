@@ -1,12 +1,23 @@
-﻿@* <form asp-action="Login" method="post">
+﻿@using System.Text.RegularExpressions;
 
-    Юзенейм
-    <input name="username" type="text" />
-    Пароль
-    <input name="password" type="text" />
-    
-    <input type="submit" value="send"></input>
-</form> *@
+@{
+    string username_str = (string)ViewData["NotCorrextPassword"];
+
+    string username = "";
+
+    if (username_str != "")
+    {
+        string pattern = @"Неправильный пароль (.*)";
+
+        Match match = Regex.Match(username_str, pattern);
+
+        if (match.Success)
+        {
+            username = match.Groups[1].Value;
+
+        }
+    }
+}
 
 <!doctype html>
 <html lang="en">
@@ -70,8 +81,19 @@
     <form class="form-signin" asp-action="Login" method="post">
         <i class="fa-solid fa-user fa-3x"></i>
         <h1 class="h3 mb-3 font-weight-normal">Вход</h1>
-        <input name="username" type="text" id="inputEmail" class="form-control" placeholder="Username" required autofocus maxlength="20">
+        <input name="username" type="text" id="inputUsername" class="form-control" placeholder="Username" required autofocus maxlength="20">
+        @{
+            if (ViewData["NotFoundMessage"] != "")
+            {
+                <h6>@ViewData["NotFoundMessage"]</h6>
+            }
+            else if (username != "")
+            {
+                <h6>Неправильный пароль</h6>
+            }
+        }
         <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+
         <div style="margin-left: auto; margin-right: auto; display: block;"><input type="checkbox" onclick="togglePasswordVisibility()"> Показать пароль</div>
         
         <button class="default-b text-dark" type="submit" value="send">Войти</button>
@@ -87,5 +109,11 @@
             passwordInput.type = "password";
         }
     }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var user = @Json.Serialize(username);
+        document.getElementById('inputUsername').value = user;
+    });
 </script>
 </html>

@@ -30,9 +30,9 @@
         {
             Layout = "/Views/Shared/layouts/_Layout_modder.cshtml";
         }
-        else if (Model.user_role == "admin")
+        else if (cl[1].Value == "admin")
         {
-            //Layout = "/Views/Shared/layouts/_Layout_test.cshtml"; тут для админа
+            Layout = "/Views/Shared/layouts/_Layout_admin.cshtml";
         }
     }
 }
@@ -103,7 +103,7 @@
         @* <i class="fa-solid fa-user fa-3x"></i> *@
         <i class="fa-solid fa-address-card fa-3x"></i>
         <h1 class="h3 mb-3 font-weight-normal">Изменение имени пользователя</h1>
-        <input name="username" type="text" id="inputEmail" class="form-control" placeholder="New username" required>
+        <input name="username" type="text" id="inputEmail" class="form-control" placeholder="New username" required minlength="6">
         @{
             if (ch == "have")
             {

@@ -32,7 +32,7 @@
         }
         else if (cl[1].Value == "admin")
         {
-            //Layout = "/Views/Shared/layouts/_Layout_test.cshtml"; тут для админа
+            Layout = "/Views/Shared/layouts/_Layout_admin.cshtml";
         }
     }
 }
@@ -387,7 +387,7 @@
     @{
         if (Model.channel_articles.Count == 0)
         {
-                <div>Статей пока нет</div>
+                <div style="margin-left: 3px;">Статей пока нет</div>
             }
             else
             {
@@ -396,41 +396,49 @@
                 
             
             <div class="grid-container">
-                    @foreach (var article in Model.channel_articles)
+                @{int counter = 0;}
+            
+                @foreach (var article in Model.channel_articles)
                 {
-                    <div class="article-card">
-                        <img class="article-image" src="@article.path_to_corer" alt="Обложка статьи">
+                        if (article.status == false)
+                        {
+                            counter++;
+                            continue;
+                        }
+
+                            <div class="article-card">
+                            <img class="article-image" src="@article.path_to_corer" alt="Обложка статьи">
 
 
-                        <div class="channel-info">
-                                <img class="avatar-art" src=@article.user.path_to_channel_icon alt="Изображение канала">
+                            <div class="channel-info">
+                                    <img class="avatar-art" src=@article.user.path_to_channel_icon alt="Изображение канала">
 
-                                <form class="channel-form" method="post" action="@Url.Action("ViewChannel", "Access")" class="channel-form">
-                                <input type="hidden" name="userId" value=@article.user.id />
-                                <div>
+                                    <form class="channel-form" method="post" action="@Url.Action("ViewChannel", "Access")" class="channel-form">
+                                    <input type="hidden" name="userId" value=@article.user.id />
+                                    <div>
 
-                                    @{
-                                        string uss = article.user.channelname;
+                                        @{
+                                            string uss = article.user.channelname;
 
-                                        if (uss.Length > 22)
-                                        {
-                                            uss = uss.Substring(0, 22);
-                                            uss += "...";
+                                            if (uss.Length > 22)
+                                            {
+                                                uss = uss.Substring(0, 22);
+                                                uss += "...";
+                                            }
                                         }
-                                    }
-                                    <a href="javascript:;" onclick="this.parentNode.parentNode.submit();" class="channel-link">@uss</a>
+                                        <a href="javascript:;" onclick="this.parentNode.parentNode.submit();" class="channel-link">@uss</a>
 
-                                    @{
-                                        string date = article.date;
+                                        @{
+                                            string date = article.date;
 
-                                        DateTime date_conv = Convert.ToDateTime(date);
+                                            DateTime date_conv = Convert.ToDateTime(date);
 
-                                        date = date_conv.Humanize(false);
-                                    }
-                                    <p class="additional-text">@date</p>
-                                </div>
-                            </form>
-                        </div>
+                                            date = date_conv.Humanize(false);
+                                        }
+                                        <p class="additional-text">@date</p>
+                                    </div>
+                                </form>
+                            </div>
 
                         @{
                             string title_ch = @article.title;
@@ -457,7 +465,113 @@
                     </div>
                 }
             </div>
+
+            if (Model.channel_articles.Count == counter)
+            {
+                <div style="margin-left: 3px;">Статей пока нет</div>
+            }
         }
     }
 </div>
+
+    <h2 style="margin-bottom: 20px;">Статьи канала, находящиеся на моддерации:</h2>
+    <div class="for">
+        @{
+            if (Model.channel_articles.Count == 0)
+            {
+                <div style="margin-left: 3px;">Статей пока нет</div>
+            }
+            else
+            {
+
+                Model.channel_articles.Reverse();
+
+
+                <div class="grid-container">
+                    @{
+                        int counter_r = 0;
+                    }
+
+                    @foreach (var article in Model.channel_articles)
+                    {
+                        if (article.status == true)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            counter_r++;
+                        }
+
+                        <div class="article-card">
+                            <img class="article-image" src="@article.path_to_corer" alt="Обложка статьи">
+
+
+                            <div class="channel-info">
+                                <img class="avatar-art" src=@article.user.path_to_channel_icon alt="Изображение канала">
+
+                                <form class="channel-form" method="post" action="@Url.Action("ViewChannel", "Access")" class="channel-form">
+                                    <input type="hidden" name="userId" value=@article.user.id />
+                                    <div>
+
+                                        @{
+                                            string uss = article.user.channelname;
+
+                                            if (uss.Length > 22)
+                                            {
+                                                uss = uss.Substring(0, 22);
+                                                uss += "...";
+                                            }
+                                        }
+                                        <a href="javascript:;" onclick="this.parentNode.parentNode.submit();" class="channel-link">@uss</a>
+
+                                        @{
+                                            string date = article.date;
+
+                                            DateTime date_conv = Convert.ToDateTime(date);
+
+                                            date = date_conv.Humanize(false);
+                                        }
+                                        <p class="additional-text">@date</p>
+                                    </div>
+                                </form>
+                            </div>
+
+                            @{
+                                string title_ch = @article.title;
+
+                                if (title_ch.Length > 76)
+                                {
+                                    title_ch = title_ch.Substring(0, 73);
+                                    title_ch += "...";
+                                }
+                            }
+
+                            <h2 class="article-title">@title_ch</h2>
+
+                            <form method="get" asp-controller="Article" asp-action="DeleteArticleRequest">
+                                <input type="hidden" name="articleId" value=@article.id />
+                                <button type="submit" class="article-delete-button">Удалить запрос</button>
+                            </form>
+
+
+                            <form method="get" asp-controller="Article" asp-action="ViewArticle">
+                                <input type="hidden" name="articleId" value=@article.id />
+                                <button type="submit" class="article-button">Перейти</button>
+                            </form>
+
+                        </div>
+                    }
+                </div>
+
+                if (counter_r == 0)
+                {
+                    <div style="margin-left: 3px;">Статей пока нет</div>
+                }
+            }
+        }
+    </div>
+
+
+
 </body>

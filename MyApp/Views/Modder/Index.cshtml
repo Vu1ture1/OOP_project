@@ -19,7 +19,7 @@
     }
     else if (cl[1].Value == "admin")
     {
-        //Layout = "/Views/Shared/layouts/_Layout_test.cshtml"; тут для админа
+        Layout = "/Views/Shared/layouts/_Layout_admin.cshtml";
     }
 }
 
@@ -188,10 +188,10 @@
 
 
                         <div class="channel-info">
-                            <img class="avatar" src=@article.article.user.path_to_icon alt="Изображение канала">
-
-                            <form class="channel-form" method="post" action="@Url.Action("", "")" class="channel-form">
-                                <input type="hidden" name="user_id" value=@article.article.user.id />
+                            <img class="avatar" src=@article.article.user.path_to_channel_icon alt="Изображение канала">
+                            
+                            <form class="channel-form" method="post" action="@Url.Action("ViewChannel", "Access")" class="channel-form">
+                                <input type="hidden" name="userId" value=@article.article.user.id />
                                 <div>
 
                                     @{

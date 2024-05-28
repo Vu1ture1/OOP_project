@@ -17,12 +17,44 @@
       "PackagePath": "staticwebassets\\Article_png\\517b39a04c824bbf97c647dbe71948c1.png"
     },
     {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\ANIME_PICTURES_NET_821351_1900x950_doki+doki+literature+club_mo.png",
+      "PackagePath": "staticwebassets\\Article_png\\ANIME_PICTURES_NET_821351_1900x950_doki+doki+literature+club_mo.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\Avatar-Profile-Vector-PNG-File.png",
+      "PackagePath": "staticwebassets\\Article_png\\Avatar-Profile-Vector-PNG-File.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\Leopard-2-A5-KNDS-001.png",
+      "PackagePath": "staticwebassets\\Article_png\\Leopard-2-A5-KNDS-001.png"
+    },
+    {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\base.png",
       "PackagePath": "staticwebassets\\Article_png\\base.png"
     },
     {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\beiheng-guo-IAVVv6z3D6g-unsplash (1).png",
+      "PackagePath": "staticwebassets\\Article_png\\beiheng-guo-IAVVv6z3D6g-unsplash (1).png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\beiheng-guo-IAVVv6z3D6g-unsplash.png",
+      "PackagePath": "staticwebassets\\Article_png\\beiheng-guo-IAVVv6z3D6g-unsplash.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\dune-movie-movies-hd-wallpaper-preview.png",
+      "PackagePath": "staticwebassets\\Article_png\\dune-movie-movies-hd-wallpaper-preview.png"
+    },
+    {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\footer.png",
       "PackagePath": "staticwebassets\\Article_png\\footer.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\imgonline-com-ua-Resize-GSERzrG1YR.png",
+      "PackagePath": "staticwebassets\\Article_png\\imgonline-com-ua-Resize-GSERzrG1YR.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\kvuv.png",
+      "PackagePath": "staticwebassets\\Article_png\\kvuv.png"
     },
     {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\Снимок экрана 2024-03-18 061545.png",
@@ -49,6 +81,10 @@
       "PackagePath": "staticwebassets\\Article_png\\Снимок экрана 2024-05-06 135051.png"
     },
     {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\Снимок экрана 2024-05-06 135108.png",
+      "PackagePath": "staticwebassets\\Article_png\\Снимок экрана 2024-05-06 135108.png"
+    },
+    {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\Снимок экрана 2024-05-08 004833.png",
       "PackagePath": "staticwebassets\\Article_png\\Снимок экрана 2024-05-08 004833.png"
     },
@@ -65,8 +101,20 @@
       "PackagePath": "staticwebassets\\Avatar_png\\517b39a04c824bbf97c647dbe71948c1.png"
     },
     {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Avatar_png\\Avatar-Profile-Vector-PNG-File.png",
+      "PackagePath": "staticwebassets\\Avatar_png\\Avatar-Profile-Vector-PNG-File.png"
+    },
+    {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Avatar_png\\blank-profile-picture-973460_1280.png",
       "PackagePath": "staticwebassets\\Avatar_png\\blank-profile-picture-973460_1280.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Avatar_png\\iqebvev.png",
+      "PackagePath": "staticwebassets\\Avatar_png\\iqebvev.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Avatar_png\\Снимок экрана 2024-05-05 043336.png",
+      "PackagePath": "staticwebassets\\Avatar_png\\Снимок экрана 2024-05-05 043336.png"
     },
     {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Avatar_png\\Снимок экрана 2024-05-06 135051.png",
@@ -75,6 +123,10 @@
     {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Avatar_png\\Снимок экрана 2024-05-06 135120.png",
       "PackagePath": "staticwebassets\\Avatar_png\\Снимок экрана 2024-05-06 135120.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Avatar_png\\Снимок экрана 2024-05-08 004833.png",
+      "PackagePath": "staticwebassets\\Avatar_png\\Снимок экрана 2024-05-08 004833.png"
     },
     {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Avatar_png\\Снимок экранацвйцв 2024-05-01 191035.png",
@@ -95,6 +147,10 @@
     {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\diagram.png",
       "PackagePath": "staticwebassets\\Image\\diagram.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\download.jpg",
+      "PackagePath": "staticwebassets\\Image\\download.jpg"
     },
     {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\Снимок экрана 2024-03-18 061545.png",
@@ -123,6 +179,10 @@
     {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\Снимок экрана 2024-05-06 135120.png",
       "PackagePath": "staticwebassets\\Image\\Снимок экрана 2024-05-06 135120.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\Снимок экрана 2024-05-24 104649.png",
+      "PackagePath": "staticwebassets\\Image\\Снимок экрана 2024-05-24 104649.png"
     },
     {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\css\\site.css",

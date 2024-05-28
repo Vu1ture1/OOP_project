@@ -27,9 +27,9 @@
         {
             Layout = "/Views/Shared/layouts/_Layout_modder.cshtml";
         }
-        else if (Model.user_role == "admin")
+        else if (cl[1].Value == "admin")
         {
-            //Layout = "/Views/Shared/layouts/_Layout_test.cshtml"; тут для админа
+            Layout = "/Views/Shared/layouts/_Layout_admin.cshtml";
         }
     }
 }
@@ -78,7 +78,7 @@
         .info-label {
             display: inline-block; /* Делаем элементы строчно-блочными */
             font-weight: bold;
-            width: 600px; /* Фиксированная ширина для меток */
+            width: 900px; /* Фиксированная ширина для меток */
             text-align: left; /* Выравниваем текст меток по правому краю */
             margin-right: 10px; /* Отступ справа от метки до поля */
             font-size: 20px;
@@ -134,7 +134,7 @@
 
 
 
-    <div class="profile-container">
+    @* <div class="profile-container">
         <form asp-action="CreateRequest" method="post" enctype="multipart/form-data">
             <span class="info-label">Введите темы статьи:</span>
             <input name="categories" type="text" id="inputcat" class="form-control" placeholder="Categories sep with ','" required>
@@ -142,7 +142,7 @@
             
             <span class="info-label">Введите заголовок статьи:</span>
             <input name="title" type="text" id="inputName" class="form-control" placeholder="Article name (10char minimum)" pattern=".{10,}" required>
-            <span class="info-label">Загрузите обложку статьи(необязательно):</span>
+            <span class="info-label">Загрузите обложку статьи(необязательно, ширина: 1700px-1850px, высота: 800px-900px):</span>
 
             <div class="divv">
             <label for="fileUpload" class="custom-file-upload">
@@ -157,21 +157,64 @@
 
             <button class="default-b text-dark" type="submit" value="send"><i class="fa-solid fa-plus"></i> Создать</button>
         </form>
+    </div> *@
+
+    <div class="profile-container">
+        <form asp-action="CreateRequest" method="post" enctype="multipart/form-data">
+            <span class="info-label">Введите темы статьи:</span>
+            <input name="categories" type="text" id="inputcat" class="form-control" placeholder="Категории статьи через ," required>
+
+            <span class="info-label">Введите заголовок статьи:</span>
+            <input name="title" type="text" id="inputName" class="form-control" placeholder="Название статьи, минимум 10 символов" pattern=".{10,}" required>
+            <span class="info-label">Загрузите обложку статьи(разрешение: 1920x1080):</span>
+
+            <div class="divv">
+                <label for="fileUpload" class="custom-file-upload">
+                    <i class="fa-solid fa-image"></i> Загрузить файл
+                </label>
+                <input type="file" id="fileUpload" name="fileUpload" accept=".png" style="display: none;"/>
+                <span class="" id="fileName"></span>
+            </div>
+
+            <span class="info-label">Содержимое статьи:</span>
+            <textarea class="form-control" name="input" id="myeditor"></textarea>
+
+            <button class="default-b text-dark" type="submit" value="send"><i class="fa-solid fa-plus"></i> Создать</button>
+        </form>
     </div>
-
-
 </body>
+
+
+<script>
+    document.getElementById('fileUpload').addEventListener('change', function (e) {
+        var file = this.files[0];
+        var img = new Image();
+        var form = e.target.form;
+
+        img.onload = function () {
+            var width = this.width;
+            var height = this.height;
+
+            if (width != 1920 && height != 1080) {
+                document.getElementById('fileName').textContent = 'Разрешение изображения не равно 1920x1080, поэтому текущее изображение будет заменено на изображение по умолчанию.';
+            }
+        };
+
+        img.src = URL.createObjectURL(file);
+    });
+</script>
 
 <script>
     // JavaScript для отображения имени файла
     document.getElementById('fileUpload').addEventListener('change', function () {
         // Получаем имя файла из пути файла
-        var fileName = "File: " + this.value.split('\\').pop();
+        var fileName = "Имя файла: " + this.value.split('\\').pop();
         // Обновляем текст элемента с именем файла
         document.getElementById('fileName').textContent = fileName;
     });
 
 </script>
+
 <script>
     class MyUploadAdapter {
         constructor(loader) {
@@ -286,7 +329,6 @@
             console.error(error);
         });
 </script>
-
 
 @* <div class="profile-container">
         <form asp-action="CreateRequest" method="post">

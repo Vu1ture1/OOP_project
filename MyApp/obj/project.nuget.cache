@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "rruLN4LJmMgaGIqTVxAeFNQrNXBlxMrxKef8Z6hJbEH4t0+KZ/3YjEnDnegezQvjoPeIhOefqkzgKYtqDmoYWQ==",
+  "dgSpecHash": "vP5yeV8RRFSkswqkKkRwGSi5ZRNDFtw3nc+5RvpidXU0bDLsLVqLvd2ErHZlPWgPwVolR2TnbAj/XnGLR9T0fg==",
   "success": true,
   "projectFilePath": "C:\\repos\\MyApp\\MyApp\\MyApp.csproj",
   "expectedPackageFiles": [
@@ -129,6 +129,7 @@
     "C:\\Users\\mihai\\.nuget\\packages\\nuget.projectmodel\\6.9.1\\nuget.projectmodel.6.9.1.nupkg.sha512",
     "C:\\Users\\mihai\\.nuget\\packages\\nuget.protocol\\6.9.1\\nuget.protocol.6.9.1.nupkg.sha512",
     "C:\\Users\\mihai\\.nuget\\packages\\nuget.versioning\\6.9.1\\nuget.versioning.6.9.1.nupkg.sha512",
+    "C:\\Users\\mihai\\.nuget\\packages\\sixlabors.imagesharp\\3.1.4\\sixlabors.imagesharp.3.1.4.nupkg.sha512",
     "C:\\Users\\mihai\\.nuget\\packages\\system.codedom\\5.0.0\\system.codedom.5.0.0.nupkg.sha512",
     "C:\\Users\\mihai\\.nuget\\packages\\system.collections.immutable\\7.0.0\\system.collections.immutable.7.0.0.nupkg.sha512",
     "C:\\Users\\mihai\\.nuget\\packages\\system.composition\\7.0.0\\system.composition.7.0.0.nupkg.sha512",

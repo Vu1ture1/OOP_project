@@ -24,9 +24,9 @@
         {
             Layout = "/Views/Shared/layouts/_Layout_modder.cshtml";
         }
-        else if (Model.user_role == "admin")
+        else if (cl[1].Value == "admin")
         {
-            //Layout = "/Views/Shared/layouts/_Layout_test.cshtml"; тут для админа
+            Layout = "/Views/Shared/layouts/_Layout_admin.cshtml";
         }
     }
 }
@@ -114,11 +114,11 @@
     <div class="profile-container">
         <form action="Upload" method="post" enctype="multipart/form-data" onsubmit="return fileUp()">
             <label for="fileUpload" class="custom-file-upload">
-                Выбрать файл .png
+                Выбрать файл
             </label>
             <input type="file" id="fileUpload" name="fileUpload" accept=".png" style="display: none;" />
             <!-- Элемент для отображения имени файла -->
-            <span class="" id="fileName"></span>
+            <span style="word-wrap: break-word; display: block; margin-left: 13px;" id="fileName"></span>
             <button class="default-b" type="submit">Загрузить на сервер и установить в качестве иконки</button>
            @*  <button style="margin-top: 40px;" class="default-b" asp-controller="Access" asp-action="DefaultIcon">Сброс иконки</button> *@
         </form>
@@ -142,7 +142,7 @@
 
     </script>
 
-    <script>
+   @*  <script>
         // JavaScript для отображения имени файла
         document.getElementById('fileUpload').addEventListener('change', function () {
             // Получаем имя файла из пути файла
@@ -151,6 +151,25 @@
             document.getElementById('fileName').textContent = fileName;
         });
 
+    </script> *@
+
+    <script>
+        document.getElementById('fileUpload').addEventListener('change', function (e) {
+            var file = this.files[0];
+            var img = new Image();
+            var form = e.target.form;
+
+            img.onload = function () {
+                var width = this.width;
+                var height = this.height;
+
+                if (width != height) {
+                    document.getElementById('fileName').textContent = 'Загруженное изображение не является иконкой, поэтому текущее изображение будет заменено на изображение по умолчанию.';
+                }
+            };
+
+            img.src = URL.createObjectURL(file);
+        });
     </script>
 
     <script>

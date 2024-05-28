@@ -11,7 +11,7 @@
     }
     else if (Model.user_role == "admin")
     {
-        //Layout = "/Views/Shared/layouts/_Layout_test.cshtml"; тут для админа
+        Layout = "/Views/Shared/layouts/_Layout_admin.cshtml";
     }
 
     string path = Model.path_to_icon;
@@ -192,7 +192,7 @@
         <div class="fullname"><span class="info-label"><i class="fa-solid fa-address-book"></i> Полное имя:</span><span class="info-content">Имя: @Model.user_info.firstname, Фамилия: @Model.user_info.lastname</span>
         </div>
         <a class="link-but text-dark" asp-area="" asp-controller="Article" asp-action="Index"><i class="fas fa-plus-square"></i> Написать статью</a>
-        @if (Model.user_role == "modder")
+        @if (Model.user_role == "modder" || Model.user_role == "admin")
         {
             <a class="link-but text-dark" asp-area="" asp-controller="Modder" asp-action="Index"><i class="fa-solid fa-pen"></i> Модерировать статьи</a>
         }

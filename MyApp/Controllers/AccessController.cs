@@ -10,6 +10,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Runtime.Intrinsics.Arm;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp;
 
 namespace MyApp.Controllers
 {
@@ -29,6 +31,26 @@ namespace MyApp.Controllers
         {
             ClaimsPrincipal ClUser = HttpContext.User;
 
+            if (TempData["NotFoundMessage"] != null)
+            {
+                ViewData["NotFoundMessage"] = TempData["NotFoundMessage"];
+            }
+            else 
+            {
+                ViewData["NotFoundMessage"] = "";
+            }
+
+            if (TempData["NotCorrextPassword"] != null)
+            {
+                ViewData["NotCorrextPassword"] = TempData["NotCorrextPassword"];
+            }
+            else 
+            {
+                ViewData["NotCorrextPassword"] = "";
+            }
+            
+            
+            
             if (ClUser.Identity.IsAuthenticated) 
             {
                 if (ClUser.IsInRole("user") == true)
@@ -47,7 +69,17 @@ namespace MyApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
+            TempData["NotFoundMessage"] = "";
+            TempData["NotCorrextPassword"] = "";
+
             var user_pass = context.Users.Include(u => u.user_info).Include(a => a.channel_articles).Include(sub => sub.my_subscribes).Where<User>(var => var.username == username).FirstOrDefault();
+
+            if (user_pass == null)
+            {
+                TempData["NotFoundMessage"] = $"Пользователя {username} не существует";
+
+                return RedirectToAction("Login", "Access");
+            }
 
             byte[] salt = Convert.FromBase64String(user_pass.salt);
 
@@ -59,7 +91,7 @@ namespace MyApp.Controllers
                 numBytesRequested: 256 / 8));
 
 
-            if (context.Users.Any(var => var.username == username && var.password == password) == true) 
+            if (context.Users.Any(var => var.username == username && var.password == password) == true)
             {
                 var user = context.Users.Include(u => u.user_info).Include(a => a.channel_articles).Include(sub => sub.my_subscribes).Where<User>(var => var.username == username && var.password == password).FirstOrDefault();
 
@@ -76,26 +108,43 @@ namespace MyApp.Controllers
                     AllowRefresh = true
                 };
 
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, 
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                     new ClaimsPrincipal(identity), prop);
 
                 Console.WriteLine(user.user_role);
 
                 return RedirectToAction("Index", "Home");
             }
+            else 
+            {
+                TempData["NotCorrextPassword"] = $"Неправильный пароль {username}";
 
-            ViewData["NotFoundMessage"] = "User not found";
+                return RedirectToAction("Login", "Access");
+            }
+
+            
             
             return View();
         }
         public IActionResult Registration()
         {
+            if (TempData["UserExist"] != null)
+            {
+                ViewData["UserExist"] = TempData["UserExist"];
+            }
+            else
+            {
+                ViewData["UserExist"] = "";
+            }
+
             return View();
         }
 
         [HttpPost]
         public IActionResult Registration(User user)
         {
+            TempData["UserExist"] = "";
+
             user.path_to_icon = "https://localhost:7012/Avatar_png/blank-profile-picture-973460_1280.png";
 
             user.path_to_channel_icon = "https://localhost:7012/Avatar_png/blank-profile-picture-973460_1280.png";
@@ -109,7 +158,6 @@ namespace MyApp.Controllers
                 rng.GetBytes(salt);
             }
 
-            // Хэширование пароля с использованием PBKDF2
             string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                 password: user.password,
                 salt: salt,
@@ -124,21 +172,22 @@ namespace MyApp.Controllers
             user.salt = salt_str;
 
 
-            if (context.Users.Include(u => u.user_info).Include(a => a.channel_articles).Include(sub => sub.my_subscribes).Any(var => var.user_info.email == user.user_info.email) == true)
-                {
-                    //тут сообщение об ошибке тк email уже есть
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    user.user_role = "user";
+            if (context.Users.Include(u => u.user_info).Include(a => a.channel_articles).Include(sub => sub.my_subscribes).Any(var => var.username == user.username) == true)
+            {
+                TempData["UserExist"] = $"Пользователь с таким именем {user.username} уже существует";
+                
+                return RedirectToAction("Registration", "Access");
+            }
+            else
+            {
+                user.user_role = "user";
 
-                    context.Users.Add(user);
+                context.Users.Add(user);
 
-                    context.SaveChanges();
-                }
+                context.SaveChanges();
+            }
 
-            return RedirectToAction("Login", "Access");
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult Account() 
@@ -457,16 +506,53 @@ namespace MyApp.Controllers
             }
 
             var filepath = "";
+            string servermapath = "";
 
-            string servermapath = Path.Combine(_env.WebRootPath, "Avatar_png", fileUpload.FileName);
-            //C:\repos\MyApp\MyApp\wwwroot\Image
-
-            using (var stream = new FileStream(servermapath, FileMode.Create))
+            if (fileUpload != null)
             {
-                fileUpload.CopyTo(stream);
+                using (var memoryStream = new MemoryStream())
+                {
+                    fileUpload.CopyTo(memoryStream);
+
+                    memoryStream.Seek(0, SeekOrigin.Begin);
+
+                    using (var image = Image.Load(memoryStream))
+                    {
+                        if (image.Width != image.Height)
+                        {
+                            filepath = "https://localhost:7012/Avatar_png/blank-profile-picture-973460_1280.png";
+                            goto h1;
+                        }
+                    }
+
+                    servermapath = Path.Combine(_env.WebRootPath, "Avatar_png", fileUpload.FileName);
+                    
+                    using (var stream = new FileStream(servermapath, FileMode.Create))
+                    {
+                        fileUpload.CopyTo(stream);
+                    }
+
+                    filepath = "https://localhost:7012/" + "Avatar_png/" + fileUpload.FileName;
+                }
+            }
+            else
+            {
+                filepath = "https://localhost:7012/Avatar_png/blank-profile-picture-973460_1280.png";
             }
 
-            filepath = "https://localhost:7012/" + "Avatar_png/" + fileUpload.FileName;
+            h1:
+
+            //var filepath = "";
+
+            //string servermapath = Path.Combine(_env.WebRootPath, "Avatar_png", fileUpload.FileName);
+            ////C:\repos\MyApp\MyApp\wwwroot\Image
+
+            //using (var stream = new FileStream(servermapath, FileMode.Create))
+            //{
+            //    fileUpload.CopyTo(stream);
+            //}
+
+            //filepath = "https://localhost:7012/" + "Avatar_png/" + fileUpload.FileName;
 
             ClaimsPrincipal ClUser = HttpContext.User;
 
@@ -497,28 +583,98 @@ namespace MyApp.Controllers
 
             if (option == "1") 
             {
-                servermapath = Path.Combine(_env.WebRootPath, "Avatar_png", fileUpload.FileName);
+                //servermapath = Path.Combine(_env.WebRootPath, "Avatar_png", fileUpload.FileName);
+
+                if (fileUpload != null)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        fileUpload.CopyTo(memoryStream);
+
+                        memoryStream.Seek(0, SeekOrigin.Begin);
+
+                        using (var image = Image.Load(memoryStream))
+                        {
+                            if (image.Width != image.Height)
+                            {
+                                filepath = "https://localhost:7012/Avatar_png/blank-profile-picture-973460_1280.png";
+                                goto h1;
+                            }
+                        }
+
+                        servermapath = Path.Combine(_env.WebRootPath, "Avatar_png", fileUpload.FileName);
+
+                        using (var stream = new FileStream(servermapath, FileMode.Create))
+                        {
+                            fileUpload.CopyTo(stream);
+                        }
+
+                        filepath = "https://localhost:7012/" + "Avatar_png/" + fileUpload.FileName;
+                    }
+                }
+                else
+                {
+                    filepath = "https://localhost:7012/Avatar_png/blank-profile-picture-973460_1280.png";
+                }
             }
             else 
             {
-                servermapath = Path.Combine(_env.WebRootPath, "Article_png", fileUpload.FileName);
+                //servermapath = Path.Combine(_env.WebRootPath, "Article_png", fileUpload.FileName);
+                
+                if (fileUpload != null)
+                {
+                    // Загружаем изображение в память
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        fileUpload.CopyTo(memoryStream);
+
+                        memoryStream.Seek(0, SeekOrigin.Begin);
+
+                        using (var image = Image.Load(memoryStream))
+                        {
+                            // Проверяем ширину и высоту изображения
+                            if (image.Width != 1920 || image.Height != 1080)
+                            {
+                                filepath = "https://localhost:7012/Article_png/footer.png";
+                                goto h1;
+                            }
+                        }
+
+                        servermapath = Path.Combine(_env.WebRootPath, "Article_png", fileUpload.FileName);
+
+                        using (var stream = new FileStream(servermapath, FileMode.Create))
+                        {
+                            fileUpload.CopyTo(stream);
+                        }
+
+                        filepath = "https://localhost:7012/Article_png/" + fileUpload.FileName;
+                    }
+                }
+                else
+                {
+                    filepath = "https://localhost:7012/Article_png/footer.png";
+                }
             }
+            
             //C:\repos\MyApp\MyApp\wwwroot\Image
 
-            using (var stream = new FileStream(servermapath, FileMode.Create))
-            {
-                fileUpload.CopyTo(stream);
-            }
+            //using (var stream = new FileStream(servermapath, FileMode.Create))
+            //{
+            //    fileUpload.CopyTo(stream);
+            //}
 
             
-            if (option == "1")
-            {
-                filepath = "https://localhost:7012/" + "Avatar_png/" + fileUpload.FileName;
-            }
-            else
-            {
-                filepath = "https://localhost:7012/" + "Article_png/" + fileUpload.FileName;
-            }
+            //if (option == "1")
+            //{
+            //    filepath = "https://localhost:7012/" + "Avatar_png/" + fileUpload.FileName;
+            //}
+            //else
+            //{
+            //    filepath = "https://localhost:7012/" + "Article_png/" + fileUpload.FileName;
+            //}
+
+        h1:
+
             ClaimsPrincipal ClUser = HttpContext.User;
 
             List<Claim> cl = ClUser.Claims.ToList();

@@ -10,6 +10,9 @@ using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging.Signing;
 using System.Linq;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
+using System.Security.Cryptography;
 
 namespace MyApp.Controllers
 {
@@ -107,21 +110,64 @@ namespace MyApp.Controllers
 
             //C:\repos\MyApp\MyApp\wwwroot\Image
 
+
             if (fileUpload != null)
             {
-                string servermapath = Path.Combine(_env.WebRootPath, "Article_png", fileUpload.FileName);
-
-                using (var stream = new FileStream(servermapath, FileMode.Create))
+                // Загружаем изображение в память
+                using (var memoryStream = new MemoryStream())
                 {
-                    fileUpload.CopyTo(stream);
-                }
+                    fileUpload.CopyTo(memoryStream);
 
-                filepath = "https://localhost:7012/" + "Article_png/" + fileUpload.FileName;
+                    memoryStream.Seek(0, SeekOrigin.Begin);
+
+                    using (var image = Image.Load(memoryStream))
+                    {
+                        // Проверяем ширину и высоту изображения
+                        if (image.Width != 1920 || image.Height != 1080)
+                        {
+                            filepath = "https://localhost:7012/Article_png/base.png";
+                            goto h1;
+                        }
+                    }
+
+                    string servermapath = Path.Combine(_env.WebRootPath, "Article_png", fileUpload.FileName);
+
+                    using (var stream = new FileStream(servermapath, FileMode.Create))
+                    {
+                        fileUpload.CopyTo(stream);
+                    }
+
+                    filepath = "https://localhost:7012/Article_png/" + fileUpload.FileName;
+                }
             }
-            else 
+            else
             {
-                filepath = "https://localhost:7012/" + "Article_png/" + "base.png";
+                filepath = "https://localhost:7012/Article_png/base.png";
             }
+
+            h1:
+
+            //if (fileUpload != null)
+            //{
+                
+                
+                
+                
+                
+                
+            //    string servermapath = Path.Combine(_env.WebRootPath, "Article_png", fileUpload.FileName);
+
+            //    using (var stream = new FileStream(servermapath, FileMode.Create))
+            //    {
+            //        fileUpload.CopyTo(stream);
+            //    }
+
+            //    filepath = "https://localhost:7012/" + "Article_png/" + fileUpload.FileName;
+            //}
+            //else 
+            //{
+            //    filepath = "https://localhost:7012/" + "Article_png/" + "base.png";
+            //}
 
             string pattern_cat = "[A-Za-z0-9А-Яа-я]+";
 
@@ -180,7 +226,7 @@ namespace MyApp.Controllers
 
             article.content = input;
             article.title = title;
-            article.date = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+            article.date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
             article.categories = cats;
             article.path_to_corer = filepath;
 
@@ -302,6 +348,36 @@ namespace MyApp.Controllers
             user.channel_articles.Remove(Article);
 
             context.Articles.Remove(Article);
+
+            context.SaveChanges();
+
+            return RedirectToAction("Channel", "Access");
+        }
+
+        public IActionResult DeleteArticleRequest(int articleId)
+        {
+            if (HttpContext.User.Identity.IsAuthenticated == false)
+            {
+                return RedirectToAction("Login", "Access");
+            }
+
+            ClaimsPrincipal ClUser = HttpContext.User;
+
+            List<Claim> cl = ClUser.Claims.ToList();
+
+            var user = context.Users.Include(u => u.user_info).Include(a => a.channel_articles).ThenInclude(u => u.comments).ThenInclude(u => u.creator).Include(a => a.channel_articles).ThenInclude(u => u.categories).Include(sub => sub.my_subscribes).Where<User>(var => var.username == cl[0].Value && var.user_info.email == cl[2].Value).FirstOrDefault();
+
+            var Request = context.Requests.Include(u => u.article).Include(com => com.article.comments).Include(cat => cat.article.categories).Include(t => t.article.user).Include(a => a.article.user.user_info).Where<ArticleRequest>(var => var.id == articleId).FirstOrDefault();
+
+            Request.article.user.channel_articles.Remove(Request.article);
+
+            Request.article.comments.Clear();
+
+            Request.article.categories.Clear();
+
+            context.Articles.Remove(Request.article);
+
+            context.Remove(Request);
 
             context.SaveChanges();
 
