@@ -131,38 +131,24 @@
 </head>
 
 <body>
-
-
-
-    @* <div class="profile-container">
-        <form asp-action="CreateRequest" method="post" enctype="multipart/form-data">
-            <span class="info-label">Введите темы статьи:</span>
-            <input name="categories" type="text" id="inputcat" class="form-control" placeholder="Categories sep with ','" required>
-            
-            
-            <span class="info-label">Введите заголовок статьи:</span>
-            <input name="title" type="text" id="inputName" class="form-control" placeholder="Article name (10char minimum)" pattern=".{10,}" required>
-            <span class="info-label">Загрузите обложку статьи(необязательно, ширина: 1700px-1850px, высота: 800px-900px):</span>
-
-            <div class="divv">
-            <label for="fileUpload" class="custom-file-upload">
-                    <i class="fa-solid fa-image"></i> Загрузить файл
-            </label>
-            <input type="file" id="fileUpload" name="fileUpload" accept=".png" style="display: none;" />
-            <span class="" id="fileName"></span>
-            </div>
-
-            <span class="info-label">Содержимое статьи:</span>
-            <textarea class="form-control" name="input" id="myeditor"></textarea>
-
-            <button class="default-b text-dark" type="submit" value="send"><i class="fa-solid fa-plus"></i> Создать</button>
-        </form>
-    </div> *@
-
     <div class="profile-container">
         <form asp-action="CreateRequest" method="post" enctype="multipart/form-data">
             <span class="info-label">Введите темы статьи:</span>
-            <input name="categories" type="text" id="inputcat" class="form-control" placeholder="Категории статьи через ," required>
+            @* <input name="categories" type="text" id="inputcat" class="form-control" placeholder="Категории статьи через ," required> *@
+            <select class="form-control" name="categories" required>
+                <option value="Нет темы">Нет темы</option>
+                <option value="Спорт">Спорт</option>
+                <option value="Наука">Наука</option>
+                <option value="Еда">Еда</option>
+                <option value="Культура">Культура</option>
+                <option value="Экономика">Экономика</option>
+                <option value="Технологии">Технологии</option>
+                <option value="Техника">Техника</option>
+                <option value="Гейминг">Гейминг</option>
+                <option value="Путешествия">Путешествия</option>
+                <option value="Красота и стиль">Красота и стиль</option>
+                <option value="Животные">Животные</option>
+            </select>
 
             <span class="info-label">Введите заголовок статьи:</span>
             <input name="title" type="text" id="inputName" class="form-control" placeholder="Название статьи, минимум 10 символов" pattern=".{10,}" required>

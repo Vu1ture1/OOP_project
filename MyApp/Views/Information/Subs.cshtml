@@ -1,0 +1,221 @@
+﻿@using Microsoft.AspNetCore.Mvc;
+@using MyApp.DataBaseFolder;
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Authentication;
+@using Microsoft.AspNetCore.Authentication.Cookies;
+@using MyApp.Models;
+@using Microsoft.AspNetCore.Razor.Language.Intermediate;
+@using Microsoft.EntityFrameworkCore;
+@using Humanizer;
+
+@model List<User>
+
+@{
+
+    ViewData["Title"] = "";
+
+    if (Context.User.Identity.IsAuthenticated == false)
+    {
+        Layout = "_Layout";
+    }
+    else
+    {
+        List<Claim> cl = Context.User.Claims.ToList();
+
+        if (cl[1].Value == "user")
+        {
+            Layout = "/Views/Shared/layouts/_Layout_user.cshtml";
+        }
+        else if (cl[1].Value == "modder")
+        {
+            Layout = "/Views/Shared/layouts/_Layout_modder.cshtml";
+        }
+        else if (cl[1].Value == "admin")
+        {
+            Layout = "/Views/Shared/layouts/_Layout_admin.cshtml";
+        }
+    }
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            padding-top: 70px;
+        }
+
+        .grid-container {
+            display: grid;
+            gap: 20px; /* Отступ между статьями */
+            grid-template-columns: repeat(1, 1fr); /* Создает 4 колонки равного размера */
+            grid-auto-rows: minmax(50px, auto); /* Устанавливает минимальную высоту ячеек, но позволяет им растягиваться, если содержимое требует больше пространства */
+            align-items: center;
+            justify-content: center;
+        }   
+
+        .user-card {
+            position: relative;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            overflow: hidden;
+            height: 100%;
+            min-width: 350px;
+            min-height: 50px;
+            margin-bottom: 20px;
+        }
+
+            .user-card:hover .article-image {
+                transform: scale(1.02); /* Увеличивает изображение на 0.05% при наведении */
+            }
+
+        .article-title {
+            font-size: 0.95em;
+            margin-top: 10px;
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+        .channel-link {
+            color: black;
+            text-decoration: none; /* Убирает подчеркивание */
+            position: relative; /* Для точного позиционирования */
+        }
+
+            .channel-link:hover {
+                color: darkgray; /* Цвет при наведении (серый) */
+                text-decoration: none; /* Добавляет подчеркивание при наведении */
+            }
+
+        .avatar {
+            width: 20%;
+            height: 20%;
+            background-color: #f3f3f3;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .channel-info {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+            margin-left: 20px;
+        }
+
+        .additional-text {
+            font-size: 0.8em; /* Размер шрифта */
+            color: #888; /* Цвет текста */
+            position: absolute;
+            bottom: -10px; /* Опускает текст вниз */
+            left: 15% + 10px;
+        }
+
+        .channel-form {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Распределяет контент равномерно */
+            height: 50px; /* Высота должна соответствовать высоте иконки */
+        }
+
+        .default-b {
+            border: 2px solid transparent; /* Прозрачная граница в обычном состоянии */
+            background-color: transparent; /* Прозрачный фон в обычном состоянии */
+            color: #000; /* Цвет текста */
+            padding: 5px 10px; /* Отступы вокруг текста */
+            font-size: 20px; /* Размер шрифта */
+            transition: all 0.1s ease; /* Плавность перехода */
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        .default-l-r {
+            border: 2px solid transparent; /* Прозрачная граница в обычном состоянии */
+            background-color: transparent; /* Прозрачный фон в обычном состоянии */
+            color: #000; /* Цвет текста */
+            padding: 5px 10px; /* Отступы вокруг текста */
+            font-size: 20px; /* Размер шрифта */
+            transition: all 0.1s ease; /* Плавность перехода */
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        .default-b:hover {
+            border-color: #000; /* Черная граница при наведении */
+            background-color: rgba(0, 0, 0, 0.1); /* Затемнение фона при наведении */
+            color: black;
+            transform: translate(1px, 1px);
+        }
+
+        .button-container {
+            width: 100%;
+            overflow: hidden; /* Решает проблему с просачивающимися float элементами */
+        }
+
+        .left {
+            float: left; /* Кнопка "Назад" будет выровнена слева */
+        }
+
+        .right {
+            float: right; /* Кнопка "Дальше" будет выровнена справа */
+        }
+
+    </style>
+</head>
+<body>
+    <h2 style="margin-bottom: 20px; font-size: 25px;">Подписки: </h2>
+    @{
+        if (Model.Count == 0)
+        {
+            <div>Подписок пока нет</div>
+        }
+        else
+        {
+            <div style="width: 50%; margin: 0 auto;">
+                <div class="grid-container">
+                    @foreach (var user in Model)
+                    {
+                        <div class="user-card">
+                            <div class="channel-info">
+                                <img class="avatar" src=@user.path_to_channel_icon alt="Изображение канала">
+
+                                <form class="channel-form" method="post" action="@Url.Action("ViewChannel", "Access")" class="channel-form">
+                                    <input type="hidden" name="userId" value=@user.id />
+                                    <div>
+
+                                        @{
+                                            string us = user.channelname;
+                                        }
+                                        <a style="font-size: 30px;" href="javascript:;" onclick="this.parentNode.parentNode.submit();" class="channel-link">@us</a>
+
+                                        @{
+                                            string des = user.channel_description;
+
+                                            if(des == "")
+                                            {
+                                                des = "Нет описания.";    
+                                            }
+                                            else
+                                            {
+                                                if (des.Length > 60)
+                                                {
+                                                    int maxLength = 60;
+                                                    des = des.Substring(0, maxLength);
+                                                    des += " ...";
+                                                }
+                                            }
+                                        }
+                                        <p class="additional-text">@des</p>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+
+
+</body>
+</html>

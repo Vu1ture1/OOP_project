@@ -29,7 +29,7 @@ namespace MyApp.Controllers
         {
             IEnumerable<Article> Articles;
 
-            Articles = context.Articles.Include(com => com.comments).Include(cat => cat.categories).Include(t => t.user).Include(a => a.user.user_info).Where(a => a.status == true).OrderByDescending(e => e.id).Skip((skip * 10)).Take(10).ToList();
+            Articles = context.Articles.Include(com => com.comments).Include(cat => cat.category).Include(t => t.user).Include(a => a.user.user_info).Where(a => a.status == true).OrderByDescending(e => e.id).Skip((skip * 10)).Take(10).ToList();
 
             if (Articles.Count() != 10)
             {

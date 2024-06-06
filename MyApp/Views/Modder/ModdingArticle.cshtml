@@ -185,21 +185,22 @@
     <div class="profile-container">
         
         <div class="channel-info">
-        <img class="avatar" src=@Model.article.user.path_to_icon alt="Изображение канала">
+            <img class="avatar" src=@Model.article.user.path_to_channel_icon alt="Изображение канала">
 
         <div>
-        <form class="channel-form" method="post" action="@Url.Action("", "")" class="channel-form">
-            <input type="hidden" name="user_id" value=@Model.article.user.id />
-            <div>
+            <form class="channel-form" method="post" action="@Url.Action("ViewChannel", "Access")" class="channel-form">
+                    <input type="hidden" name="userId" value=@Model.article.user.id />
+                    
+                <div>
 
-                <a href="javascript:;" onclick="this.parentNode.parentNode.submit();" class="channel-link">@Model.article.user.channelname</a>
+                    <a href="javascript:;" onclick="this.parentNode.parentNode.submit();" class="channel-link">@Model.article.user.channelname</a>
 
-                        @{
-                            string str = Model.article.user.subscribers_num.ToString() + " " + @GetSubscriberDeclension(Model.article.user.subscribers_num);
-                        }
+                            @{
+                                string str = Model.article.user.subscribers_num.ToString() + " " + @GetSubscriberDeclension(Model.article.user.subscribers_num);
+                            }
 
-                        <p class="additional-text">@str</p>
-            </div>
+                            <p class="additional-text">@str</p>
+                </div>
         </form>
         </div>
 
@@ -233,6 +234,8 @@
         
         
         <div class="texttt">@formattedDate</div>
+
+        <h6 style="margin-bottom: 20px;">Тема статьи: @Model.article.category.categoty_str</h6>
         @Html.Raw(@Model.article.content)
 
         <div style="display: flex; justify-content: space-between;">

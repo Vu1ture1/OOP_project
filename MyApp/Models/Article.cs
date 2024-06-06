@@ -23,7 +23,7 @@ namespace MyApp.Models
 
             comments = new List<Comment>();
 
-            categories = new List<Category>();
+            category = new Category();
         }
 
         [Key]
@@ -34,7 +34,7 @@ namespace MyApp.Models
         public List<Comment> comments { get; set; }
         public int likes { get; set; }
         public bool status {  get; set; }
-        public List<Category> categories { get; set; }
+        public Category category { get; set; }
 
         public string path_to_corer {  get; set; }
 

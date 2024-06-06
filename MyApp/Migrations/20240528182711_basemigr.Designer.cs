@@ -12,8 +12,8 @@ using MyApp.DataBaseFolder;
 namespace MyApp.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20240507013307_migr2")]
-    partial class migr2
+    [Migration("20240528182711_basemigr")]
+    partial class basemigr
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,9 @@ namespace MyApp.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int>("categoryid")
+                        .HasColumnType("int");
 
                     b.Property<string>("content")
                         .IsRequired()
@@ -59,6 +62,8 @@ namespace MyApp.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("id");
+
+                    b.HasIndex("categoryid");
 
                     b.HasIndex("userid");
 
@@ -91,16 +96,11 @@ namespace MyApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<int?>("Articleid")
-                        .HasColumnType("int");
-
                     b.Property<string>("categoty_str")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
-
-                    b.HasIndex("Articleid");
 
                     b.ToTable("Category");
                 });
@@ -229,11 +229,19 @@ namespace MyApp.Migrations
 
             modelBuilder.Entity("MyApp.Models.Article", b =>
                 {
+                    b.HasOne("MyApp.Models.Category", "category")
+                        .WithMany()
+                        .HasForeignKey("categoryid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MyApp.Models.User", "user")
                         .WithMany("channel_articles")
                         .HasForeignKey("userid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("category");
 
                     b.Navigation("user");
                 });
@@ -247,13 +255,6 @@ namespace MyApp.Migrations
                         .IsRequired();
 
                     b.Navigation("article");
-                });
-
-            modelBuilder.Entity("MyApp.Models.Category", b =>
-                {
-                    b.HasOne("MyApp.Models.Article", null)
-                        .WithMany("categories")
-                        .HasForeignKey("Articleid");
                 });
 
             modelBuilder.Entity("MyApp.Models.Comment", b =>
@@ -288,8 +289,6 @@ namespace MyApp.Migrations
 
             modelBuilder.Entity("MyApp.Models.Article", b =>
                 {
-                    b.Navigation("categories");
-
                     b.Navigation("comments");
                 });
 

@@ -1,0 +1,365 @@
+﻿@using Microsoft.AspNetCore.Mvc;
+@using MyApp.DataBaseFolder;
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Authentication;
+@using Microsoft.AspNetCore.Authentication.Cookies;
+@using MyApp.Models;
+@using Microsoft.AspNetCore.Razor.Language.Intermediate;
+@using Microsoft.EntityFrameworkCore;
+@using Humanizer;
+
+@model List<Article>
+
+@{
+
+    if (Context.User.Identity.IsAuthenticated == false)
+    {
+        Layout = "_Layout";
+    }
+    else
+    {
+        List<Claim> cl = Context.User.Claims.ToList();
+
+        if (cl[1].Value == "user")
+        {
+            Layout = "/Views/Shared/layouts/_Layout_user.cshtml";
+        }
+        else if (cl[1].Value == "modder")
+        {
+            Layout = "/Views/Shared/layouts/_Layout_modder.cshtml";
+        }
+        else if (cl[1].Value == "admin")
+        {
+            Layout = "/Views/Shared/layouts/_Layout_admin.cshtml";
+        }
+    }
+
+    string next_b = (string)ViewData["PageNext"];
+
+    string back_b = (string)ViewData["PageBack"];
+
+    int skip = (int)ViewData["skip"];
+}
+
+<head>
+    <style>
+        body {
+            padding-top: 70px;
+        }
+
+        .user-card {
+            position: relative;
+            width: auto;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+            .user-card img {
+                width: 113%;
+                height: 100%;
+            }
+
+        .grid-container {
+            display: grid;
+            /* grid-template-columns: repeat(4, 1fr); */ /* 3 статьи в одной строке */
+            gap: 20px; /* Отступ между статьями */
+            grid-template-columns: repeat(4, 1fr); /* Создает 4 колонки равного размера */
+            grid-auto-rows: minmax(100px, auto); /* Устанавливает минимальную высоту ячеек, но позволяет им растягиваться, если содержимое требует больше пространства */
+            align-items: stretch; /* Растягивает элементы, чтобы они занимали всю высоту ячейки */
+        }
+
+        .article-card {
+            position: relative;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            overflow: hidden;
+            height: 100%;
+            min-width: 350px;
+            min-height: 400px;
+            margin-bottom: 20px;
+        }
+
+            .article-card:hover .article-image {
+                transform: scale(1.02); /* Увеличивает изображение на 0.05% при наведении */
+            }
+
+        .article-image {
+            width: 100%;
+            height: 200px;
+            border-top-left-radius: 20px; /* Закругление верхнего левого угла */
+            border-top-right-radius: 20px; /* Закругление верхнего правого угла */
+
+            transition: transform 0.3s ease-in-out; /* Добавьте это для плавного перехода */
+        }
+
+        .article-title {
+            font-size: 0.95em;
+            margin-top: 10px;
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+        .article-button {
+            position: absolute; /* Абсолютное позиционирование */
+            bottom: 20px; /* Расстояние от нижнего края */
+            right: 20px; /* Положение по горизонтали */
+
+            border: 2px solid transparent; /* Прозрачная граница в обычном состоянии */
+            background-color: transparent; /* Прозрачный фон в обычном состоянии */
+            font-size: 20px; /* Размер шрифта */
+
+            color: black;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: all 0.1s ease; /* Плавность перехода */
+        }
+
+            /* Дополнительные стили для .article-button при наведении */
+            .article-button:hover {
+                border-color: black; /* Черная граница при наведении */
+                background-color: rgba(0, 0, 0, 0.1); /* Затемнение фона при наведении */
+                transform: translate(1px, 1px);
+            }
+
+
+        .channel-button {
+            width: auto;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 12px;
+            border: none;
+            font-size: 20px;
+            margin-right: 20px;
+            height: 45px;
+            background-color: white;
+            transition: all 0.1s ease; /* Плавность перехода */
+        }
+
+            .channel-button:hover {
+                background-color: lightgray;
+            }
+
+        .channel-link {
+            color: black;
+            text-decoration: none; /* Убирает подчеркивание */
+            position: relative; /* Для точного позиционирования */
+        }
+
+            .channel-link:hover {
+                color: darkgray; /* Цвет при наведении (серый) */
+                text-decoration: none; /* Добавляет подчеркивание при наведении */
+            }
+
+        .avatar {
+            width: 15%;
+            height: 15%;
+            background-color: #f3f3f3;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .channel-info {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+            margin-left: 20px;
+        }
+
+        .additional-text {
+            font-size: 0.8em; /* Размер шрифта */
+            color: #888; /* Цвет текста */
+            position: absolute;
+            bottom: -10px; /* Опускает текст вниз */
+            left: 15% + 10px;
+        }
+
+        .channel-form {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Распределяет контент равномерно */
+            height: 50px; /* Высота должна соответствовать высоте иконки */
+        }
+
+        .default-b {
+            border: 2px solid transparent; /* Прозрачная граница в обычном состоянии */
+            background-color: transparent; /* Прозрачный фон в обычном состоянии */
+            color: #000; /* Цвет текста */
+            padding: 5px 10px; /* Отступы вокруг текста */
+            font-size: 20px; /* Размер шрифта */
+            transition: all 0.1s ease; /* Плавность перехода */
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        .default-b-b:hover {
+            border-color: #000; /* Черная граница при наведении */
+            background-color: rgba(0, 0, 0, 0.1); /* Затемнение фона при наведении */
+            color: black;
+            transform: translate(1px, 1px);
+        }
+
+        .button-container {
+            width: 100%;
+            overflow: hidden; /* Решает проблему с просачивающимися float элементами */
+        }
+
+        .left {
+            float: left; /* Кнопка "Назад" будет выровнена слева */
+        }
+
+        .right {
+            float: right; /* Кнопка "Дальше" будет выровнена справа */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="user-card">
+        <img class="user-image" src="https://localhost:7012/Themes/travel_base.png">
+    </div>
+
+    <div style="display: flex; margin-bottom: 10px;">
+
+
+
+        <form method="get" asp-controller="Theme" asp-action="Index">
+            <input type="hidden" name="skip" value=0 />
+            <button type="submit" class="channel-button">Всё</button>
+        </form>
+
+        <form method="get" asp-controller="Theme" asp-action="Sport">
+            <input type="hidden" name="skip" value=0 />
+            <button type="submit" class="channel-button">Спорт</button>
+        </form>
+
+        <form method="get" asp-controller="Theme" asp-action="Science">
+            <input type="hidden" name="skip" value=0 />
+            <button type="submit" class="channel-button">Наука</button>
+        </form>
+
+        <form method="get" asp-controller="Theme" asp-action="Food">
+            <input type="hidden" name="skip" value=0 />
+            <button type="submit" class="channel-button">Еда</button>
+        </form>
+
+        <form method="get" asp-controller="Theme" asp-action="Culture">
+            <input type="hidden" name="skip" value=0 />
+            <button type="submit" class="channel-button">Культура</button>
+        </form>
+
+        <form method="get" asp-controller="Theme" asp-action="Economy">
+            <input type="hidden" name="skip" value=0 />
+            <button type="submit" class="channel-button">Экономика</button>
+        </form>
+
+        <form method="get" asp-controller="Theme" asp-action="Tech">
+            <input type="hidden" name="skip" value=0 />
+            <button type="submit" class="channel-button">Технологии</button>
+        </form>
+
+        <form method="get" asp-controller="Theme" asp-action="Mech">
+            <input type="hidden" name="skip" value=0 />
+            <button type="submit" class="channel-button">Техника</button>
+        </form>
+
+        <form method="get" asp-controller="Theme" asp-action="Gaming">
+            <input type="hidden" name="skip" value=0 />
+            <button type="submit" class="channel-button">Гейминг</button>
+        </form>
+
+        <button type="submit" class="channel-button" style="background-color: lightgray;">Путешествия</button>
+        
+        <form method="get" asp-controller="Theme" asp-action="BeautyAndStyle">
+            <input type="hidden" name="skip" value=0 />
+            <button type="submit" class="channel-button">Красота и стиль</button>
+        </form>
+
+        <form method="get" asp-controller="Theme" asp-action="Animals">
+            <input type="hidden" name="skip" value=0 />
+            <button type="submit" class="channel-button">Животные</button>
+        </form>
+    </div>
+
+    <div style="margin-bottom: 15px;" class="button-container">
+        <form method="get" asp-controller="Theme" asp-action="Back">
+            <input type="hidden" name="skip" value=@skip />
+            <input type="hidden" name="op" value=9 />
+            <button type="submit" class="default-b left"><i class="fa-solid fa-arrow-left"></i> Назад</button>
+        </form>
+
+        <form method="get" asp-controller="Theme" asp-action="Next">
+            <input type="hidden" name="skip" value=@skip />
+            <input type="hidden" name="op" value=9 />
+            <button type="submit" class="default-b">Дальше <i class="fa-solid fa-arrow-right"></i></button>
+        </form>
+    </div>
+
+    @{
+        if (Model.Count == 0)
+        {
+            <div>Статей на данную тему пока нет</div>
+        }
+        else
+        {
+            <div class="grid-container">
+                @foreach (var article in Model)
+                {
+                    <div class="article-card">
+                        <img class="article-image" src="@article.path_to_corer" alt="Обложка статьи">
+
+                        <div class="channel-info">
+                            <img class="avatar" src=@article.user.path_to_channel_icon alt="Изображение канала">
+
+                            <form class="channel-form" method="post" action="@Url.Action("ViewChannel", "Access")" class="channel-form">
+                                <input type="hidden" name="userId" value=@article.user.id />
+                                <div>
+
+                                    @{
+                                        string us = article.user.channelname;
+
+                                        if (us.Length > 22)
+                                        {
+                                            us = us.Substring(0, 22);
+                                            us += "...";
+                                        }
+                                    }
+                                    <a href="javascript:;" onclick="this.parentNode.parentNode.submit();" class="channel-link">@us</a>
+
+                                    @{
+                                        string date = article.date;
+
+                                        DateTime date_conv = Convert.ToDateTime(date);
+
+                                        date = date_conv.Humanize(false);
+                                    }
+                                    <p class="additional-text">@date</p>
+                                </div>
+                            </form>
+                        </div>
+
+                        @{
+                            string title_ch = @article.title;
+
+                            if (title_ch.Length > 76)
+                            {
+                                title_ch = title_ch.Substring(0, 73);
+                                title_ch += "...";
+                            }
+                        }
+
+                        <h2 class="article-title">@title_ch</h2>
+
+
+                        <form method="get" asp-controller="Article" asp-action="ViewArticle">
+                            <input type="hidden" name="articleId" value=@article.id />
+                            <button type="submit" class="article-button">Перейти</button>
+                        </form>
+                    </div>
+                }
+            </div>
+        }
+    }
+</body>

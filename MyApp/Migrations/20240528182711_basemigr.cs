@@ -5,11 +5,24 @@
 namespace MyApp.Migrations
 {
     /// <inheritdoc />
-    public partial class migr2 : Migration
+    public partial class basemigr : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Category",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    categoty_str = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Category", x => x.id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "UserInfo",
                 columns: table => new
@@ -71,6 +84,7 @@ namespace MyApp.Migrations
                     title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     likes = table.Column<int>(type: "int", nullable: false),
                     status = table.Column<bool>(type: "bit", nullable: false),
+                    categoryid = table.Column<int>(type: "int", nullable: false),
                     path_to_corer = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     date = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -79,30 +93,17 @@ namespace MyApp.Migrations
                 {
                     table.PrimaryKey("PK_Articles", x => x.id);
                     table.ForeignKey(
+                        name: "FK_Articles_Category_categoryid",
+                        column: x => x.categoryid,
+                        principalTable: "Category",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Articles_Users_userid",
                         column: x => x.userid,
                         principalTable: "Users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Category",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    categoty_str = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Articleid = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Category", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_Category_Articles_Articleid",
-                        column: x => x.Articleid,
-                        principalTable: "Articles",
-                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
@@ -152,14 +153,14 @@ namespace MyApp.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Articles_categoryid",
+                table: "Articles",
+                column: "categoryid");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Articles_userid",
                 table: "Articles",
                 column: "userid");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Category_Articleid",
-                table: "Category",
-                column: "Articleid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comment_Articleid",
@@ -191,9 +192,6 @@ namespace MyApp.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Category");
-
-            migrationBuilder.DropTable(
                 name: "Comment");
 
             migrationBuilder.DropTable(
@@ -201,6 +199,9 @@ namespace MyApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "Articles");
+
+            migrationBuilder.DropTable(
+                name: "Category");
 
             migrationBuilder.DropTable(
                 name: "Users");

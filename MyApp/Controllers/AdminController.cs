@@ -92,7 +92,7 @@ namespace MyApp.Controllers
                 return RedirectToAction("Login", "Access");
             }
 
-            var user = context.Users.Include(u => u.user_info).Include(a => a.channel_articles).ThenInclude(u => u.comments).ThenInclude(u => u.creator).Include(a => a.channel_articles).ThenInclude(u => u.categories).Include(sub => sub.my_subscribes).Where<User>(var => var.id == userId).FirstOrDefault();
+            var user = context.Users.Include(u => u.user_info).Include(a => a.channel_articles).ThenInclude(u => u.comments).ThenInclude(u => u.creator).Include(a => a.channel_articles).ThenInclude(u => u.category).Include(sub => sub.my_subscribes).Where<User>(var => var.id == userId).FirstOrDefault();
 
             foreach(Article art in user.channel_articles) 
             {

@@ -12,10 +12,10 @@
     <style>
         .left-nav {
             top: 70px;
-            width: 175px;
+            width: 190px;
             position: fixed;
             height: calc(100% - 70px);
-            background-color: #ffffff;
+            /* background-color: #ffffff; */
             padding: 10px;
             box-sizing: border-box;
         }
@@ -99,7 +99,9 @@
     <div class="left-nav">
         <nav>
 
-
+            <a class="nav-link text-dark" style="font-size: 15px;" asp-area="" asp-controller="Theme" asp-action="Index"><i class="fa-solid fa-compass"></i> Темы</a>
+            <a class="nav-link text-dark" style="font-size: 15px;" asp-area="" asp-controller="Information" asp-action="Subs"><i class="fa-solid fa-folder-open"></i> Подписки</a>
+            <a class="nav-link text-dark" style="font-size: 15px;" asp-area="" asp-controller="Information" asp-action="Likes"><i class="fa-solid fa-heart"></i> Понравившиеся</a>
            @*  <a class="nav-link text-dark" asp-area="" asp-controller="Article" asp-action="Index"><i class="fas fa-plus-square"></i> CreateArticle</a> *@
             @* <a class="nav-link text-dark" asp-area="" asp-controller="Access" asp-action="Logout"><i class="fas fa-sign-out-alt"></i> Logout</a> *@
 

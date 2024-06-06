@@ -41,6 +41,10 @@
       "PackagePath": "staticwebassets\\Article_png\\beiheng-guo-IAVVv6z3D6g-unsplash.png"
     },
     {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\download (1).png",
+      "PackagePath": "staticwebassets\\Article_png\\download (1).png"
+    },
+    {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\dune-movie-movies-hd-wallpaper-preview.png",
       "PackagePath": "staticwebassets\\Article_png\\dune-movie-movies-hd-wallpaper-preview.png"
     },
@@ -55,6 +59,14 @@
     {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\kvuv.png",
       "PackagePath": "staticwebassets\\Article_png\\kvuv.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\mikroshema_shemy_chb_126894_1920x1080.png",
+      "PackagePath": "staticwebassets\\Article_png\\mikroshema_shemy_chb_126894_1920x1080.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\peppa-pig-pictures-1asjezijtwy8n7m1.png",
+      "PackagePath": "staticwebassets\\Article_png\\peppa-pig-pictures-1asjezijtwy8n7m1.png"
     },
     {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\Снимок экрана 2024-03-18 061545.png",
@@ -89,6 +101,14 @@
       "PackagePath": "staticwebassets\\Article_png\\Снимок экрана 2024-05-08 004833.png"
     },
     {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\Снимок экрана 2024-05-29 022733 (1).png",
+      "PackagePath": "staticwebassets\\Article_png\\Снимок экрана 2024-05-29 022733 (1).png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\Снимок экрана 2024-05-29 040512.png",
+      "PackagePath": "staticwebassets\\Article_png\\Снимок экрана 2024-05-29 040512.png"
+    },
+    {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Article_png\\Снимок экранацвйцв 2024-05-01 191035.png",
       "PackagePath": "staticwebassets\\Article_png\\Снимок экранацвйцв 2024-05-01 191035.png"
     },
@@ -107,6 +127,14 @@
     {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Avatar_png\\blank-profile-picture-973460_1280.png",
       "PackagePath": "staticwebassets\\Avatar_png\\blank-profile-picture-973460_1280.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Avatar_png\\download.png",
+      "PackagePath": "staticwebassets\\Avatar_png\\download.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Avatar_png\\image.png",
+      "PackagePath": "staticwebassets\\Avatar_png\\image.png"
     },
     {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Avatar_png\\iqebvev.png",
@@ -183,6 +211,102 @@
     {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\Снимок экрана 2024-05-24 104649.png",
       "PackagePath": "staticwebassets\\Image\\Снимок экрана 2024-05-24 104649.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\Снимок экрана 2024-05-24 110029.png",
+      "PackagePath": "staticwebassets\\Image\\Снимок экрана 2024-05-24 110029.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\Снимок экрана 2024-05-24 110044.png",
+      "PackagePath": "staticwebassets\\Image\\Снимок экрана 2024-05-24 110044.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\Снимок экрана 2024-05-24 110105.png",
+      "PackagePath": "staticwebassets\\Image\\Снимок экрана 2024-05-24 110105.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\Снимок экрана 2024-05-24 110120.png",
+      "PackagePath": "staticwebassets\\Image\\Снимок экрана 2024-05-24 110120.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\Снимок экрана 2024-05-24 110135.png",
+      "PackagePath": "staticwebassets\\Image\\Снимок экрана 2024-05-24 110135.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\Снимок экрана 2024-05-24 110150.png",
+      "PackagePath": "staticwebassets\\Image\\Снимок экрана 2024-05-24 110150.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\Снимок экрана 2024-05-24 110203.png",
+      "PackagePath": "staticwebassets\\Image\\Снимок экрана 2024-05-24 110203.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\Снимок экрана 2024-05-24 110215.png",
+      "PackagePath": "staticwebassets\\Image\\Снимок экрана 2024-05-24 110215.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\Снимок экрана 2024-05-29 022733.png",
+      "PackagePath": "staticwebassets\\Image\\Снимок экрана 2024-05-29 022733.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\Снимок экрана 2024-05-29 040512.png",
+      "PackagePath": "staticwebassets\\Image\\Снимок экрана 2024-05-29 040512.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\Снимок экрана 2024-05-29 040536.png",
+      "PackagePath": "staticwebassets\\Image\\Снимок экрана 2024-05-29 040536.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Image\\Снимок экрана 2024-05-31 112046.png",
+      "PackagePath": "staticwebassets\\Image\\Снимок экрана 2024-05-31 112046.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Themes\\animals_base.png",
+      "PackagePath": "staticwebassets\\Themes\\animals_base.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Themes\\culture_base.png",
+      "PackagePath": "staticwebassets\\Themes\\culture_base.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Themes\\economy_base.png",
+      "PackagePath": "staticwebassets\\Themes\\economy_base.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Themes\\food_base.png",
+      "PackagePath": "staticwebassets\\Themes\\food_base.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Themes\\gaming_base.png",
+      "PackagePath": "staticwebassets\\Themes\\gaming_base.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Themes\\main_theme.png",
+      "PackagePath": "staticwebassets\\Themes\\main_theme.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Themes\\mech_base.png",
+      "PackagePath": "staticwebassets\\Themes\\mech_base.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Themes\\science_main.png",
+      "PackagePath": "staticwebassets\\Themes\\science_main.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Themes\\sport_base.png",
+      "PackagePath": "staticwebassets\\Themes\\sport_base.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Themes\\style_base.png",
+      "PackagePath": "staticwebassets\\Themes\\style_base.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Themes\\tech_base.png",
+      "PackagePath": "staticwebassets\\Themes\\tech_base.png"
+    },
+    {
+      "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\Themes\\travel_base.png",
+      "PackagePath": "staticwebassets\\Themes\\travel_base.png"
     },
     {
       "Id": "C:\\repos\\MyApp\\MyApp\\wwwroot\\css\\site.css",

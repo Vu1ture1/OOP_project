@@ -171,16 +171,9 @@ namespace MyApp.Controllers
 
             string pattern_cat = "[A-Za-z0-9А-Яа-я]+";
 
-            List<Category> cats = new List<Category>();
-            
-            foreach (Match m in Regex.Matches(categories, pattern_cat))
-            {
-                Category cat = new Category();
+            Category cat = new Category();
 
-                cat.categoty_str = m.Value;
-                
-                cats.Add(cat);
-            }
+            cat.categoty_str = categories;
 
             //Console.WriteLine(content);
 
@@ -227,7 +220,7 @@ namespace MyApp.Controllers
             article.content = input;
             article.title = title;
             article.date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-            article.categories = cats;
+            article.category = cat;
             article.path_to_corer = filepath;
 
             ClaimsPrincipal ClUser = HttpContext.User;
@@ -289,7 +282,7 @@ namespace MyApp.Controllers
 
         public IActionResult ViewArticle(int articleId)
         {
-            var Article = context.Articles.Include(com => com.comments).ThenInclude(c => c.creator).Include(cat => cat.categories).Include(t => t.user).Include(a => a.user.user_info).Where<Article>(var => var.id == articleId).FirstOrDefault();
+            var Article = context.Articles.Include(com => com.comments).ThenInclude(c => c.creator).Include(cat => cat.category).Include(t => t.user).Include(a => a.user.user_info).Where<Article>(var => var.id == articleId).FirstOrDefault();
 
             
             if (HttpContext.User.Identity.IsAuthenticated == true)
@@ -341,9 +334,9 @@ namespace MyApp.Controllers
 
             List<Claim> cl = ClUser.Claims.ToList();
 
-            var user = context.Users.Include(u => u.user_info).Include(a => a.channel_articles).ThenInclude(u => u.comments).ThenInclude(u => u.creator).Include(a => a.channel_articles).ThenInclude(u => u.categories).Include(sub => sub.my_subscribes).Where<User>(var => var.username == cl[0].Value && var.user_info.email == cl[2].Value).FirstOrDefault();
+            var user = context.Users.Include(u => u.user_info).Include(a => a.channel_articles).ThenInclude(u => u.comments).ThenInclude(u => u.creator).Include(a => a.channel_articles).ThenInclude(u => u.category).Include(sub => sub.my_subscribes).Where<User>(var => var.username == cl[0].Value && var.user_info.email == cl[2].Value).FirstOrDefault();
 
-            var Article = context.Articles.Include(com => com.comments).ThenInclude(c => c.creator).Include(cat => cat.categories).Include(t => t.user).Include(a => a.user.user_info).Where<Article>(var => var.id == articleId).FirstOrDefault();
+            var Article = context.Articles.Include(com => com.comments).ThenInclude(c => c.creator).Include(cat => cat.category).Include(t => t.user).Include(a => a.user.user_info).Where<Article>(var => var.id == articleId).FirstOrDefault();
 
             user.channel_articles.Remove(Article);
 
@@ -365,15 +358,17 @@ namespace MyApp.Controllers
 
             List<Claim> cl = ClUser.Claims.ToList();
 
-            var user = context.Users.Include(u => u.user_info).Include(a => a.channel_articles).ThenInclude(u => u.comments).ThenInclude(u => u.creator).Include(a => a.channel_articles).ThenInclude(u => u.categories).Include(sub => sub.my_subscribes).Where<User>(var => var.username == cl[0].Value && var.user_info.email == cl[2].Value).FirstOrDefault();
+            var user = context.Users.Include(u => u.user_info).Include(a => a.channel_articles).ThenInclude(u => u.comments).ThenInclude(u => u.creator).Include(a => a.channel_articles).ThenInclude(u => u.category).Include(sub => sub.my_subscribes).Where<User>(var => var.username == cl[0].Value && var.user_info.email == cl[2].Value).FirstOrDefault();
 
-            var Request = context.Requests.Include(u => u.article).Include(com => com.article.comments).Include(cat => cat.article.categories).Include(t => t.article.user).Include(a => a.article.user.user_info).Where<ArticleRequest>(var => var.id == articleId).FirstOrDefault();
+            var Request = context.Requests.Include(u => u.article).Include(com => com.article.comments).Include(cat => cat.article.category).Include(t => t.article.user).Include(a => a.article.user.user_info).Where<ArticleRequest>(var => var.id == articleId).FirstOrDefault();
 
             Request.article.user.channel_articles.Remove(Request.article);
 
             Request.article.comments.Clear();
 
-            Request.article.categories.Clear();
+            context.Remove(Request.article.category);
+
+            Request.article.category = null;
 
             context.Articles.Remove(Request.article);
 
@@ -442,7 +437,7 @@ namespace MyApp.Controllers
                 return RedirectToAction("Login", "Access");
             }
 
-            var Article = context.Articles.Include(com => com.comments).Include(cat => cat.categories).Include(t => t.user).Include(a => a.user.user_info).Where<Article>(var => var.id == articleId).FirstOrDefault();
+            var Article = context.Articles.Include(com => com.comments).Include(cat => cat.category).Include(t => t.user).Include(a => a.user.user_info).Where<Article>(var => var.id == articleId).FirstOrDefault();
 
             ClaimsPrincipal ClUser = HttpContext.User;
 
@@ -479,7 +474,7 @@ namespace MyApp.Controllers
 
             var user_viewer = context.Users.Include(u => u.user_info).Include(a => a.channel_articles).Include(sub => sub.my_subscribes).Where<User>(var => var.username == cl[0].Value && var.user_info.email == cl[2].Value).FirstOrDefault();
 
-            var Article = context.Articles.Include(com => com.comments).Include(cat => cat.categories).Include(t => t.user).Include(a => a.user.user_info).Where<Article>(var => var.id == articleId).FirstOrDefault();
+            var Article = context.Articles.Include(com => com.comments).Include(cat => cat.category).Include(t => t.user).Include(a => a.user.user_info).Where<Article>(var => var.id == articleId).FirstOrDefault();
 
             user_viewer.Liked_articles.Add(Article.id);
 
@@ -504,7 +499,7 @@ namespace MyApp.Controllers
 
             var user_viewer = context.Users.Include(u => u.user_info).Include(a => a.channel_articles).Include(sub => sub.my_subscribes).Where<User>(var => var.username == cl[0].Value && var.user_info.email == cl[2].Value).FirstOrDefault();
 
-            var Article = context.Articles.Include(com => com.comments).Include(cat => cat.categories).Include(t => t.user).Include(a => a.user.user_info).Where<Article>(var => var.id == articleId).FirstOrDefault();
+            var Article = context.Articles.Include(com => com.comments).Include(cat => cat.category).Include(t => t.user).Include(a => a.user.user_info).Where<Article>(var => var.id == articleId).FirstOrDefault();
 
             user_viewer.Liked_articles.Remove(Article.id);
 

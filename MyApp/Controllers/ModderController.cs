@@ -27,7 +27,7 @@ namespace MyApp.Controllers
                 return RedirectToAction("Login", "Access");
             }
             
-            IEnumerable < ArticleRequest > ArticleReques = context.Requests.Include(u => u.article).Include(com => com.article.comments).Include(cat => cat.article.categories).Include(t => t.article.user).Include(a => a.article.user.user_info).Take(10).ToList();
+            IEnumerable < ArticleRequest > ArticleReques = context.Requests.Include(u => u.article).Include(com => com.article.comments).Include(cat => cat.article.category).Include(t => t.article.user).Include(a => a.article.user.user_info).Take(10).ToList();
 
             return View(ArticleReques);
         }
@@ -39,7 +39,7 @@ namespace MyApp.Controllers
                 return RedirectToAction("Login", "Access");
             }
 
-            var art = context.Requests.Include(u => u.article).Include(com => com.article.comments).Include(cat => cat.article.categories).Include(t => t.article.user).Include(a => a.article.user.user_info).Where<ArticleRequest>(var => var.id == articleId).FirstOrDefault();
+            var art = context.Requests.Include(u => u.article).Include(com => com.article.comments).Include(cat => cat.article.category).Include(t => t.article.user).Include(a => a.article.user.user_info).Where<ArticleRequest>(var => var.id == articleId).FirstOrDefault();
 
             ClaimsPrincipal ClUser = HttpContext.User;
 
@@ -68,7 +68,7 @@ namespace MyApp.Controllers
                 return RedirectToAction("Login", "Access");
             }
 
-            var art = context.Requests.Include(u => u.article).Include(com => com.article.comments).Include(cat => cat.article.categories).Include(t => t.article.user).Include(a => a.article.user.user_info).Where<ArticleRequest>(var => var.id == articleId).FirstOrDefault();
+            var art = context.Requests.Include(u => u.article).Include(com => com.article.comments).Include(cat => cat.article.category).Include(t => t.article.user).Include(a => a.article.user.user_info).Where<ArticleRequest>(var => var.id == articleId).FirstOrDefault();
 
             ClaimsPrincipal ClUser = HttpContext.User;
 
@@ -95,7 +95,7 @@ namespace MyApp.Controllers
                 return RedirectToAction("Login", "Access");
             }
 
-            var art = context.Requests.Include(u => u.article).Include(com => com.article.comments).Include(cat => cat.article.categories).Include(t => t.article.user).Include(a => a.article.user.user_info).Where<ArticleRequest>(var => var.id == articleId).FirstOrDefault();
+            var art = context.Requests.Include(u => u.article).Include(com => com.article.comments).Include(cat => cat.article.category).Include(t => t.article.user).Include(a => a.article.user.user_info).Where<ArticleRequest>(var => var.id == articleId).FirstOrDefault();
 
             ClaimsPrincipal ClUser = HttpContext.User;
 
@@ -121,7 +121,7 @@ namespace MyApp.Controllers
                 return RedirectToAction("Login", "Access");
             }
 
-            var art = context.Requests.Include(u => u.article).Include(com => com.article.comments).Include(cat => cat.article.categories).Include(t => t.article.user).Include(a => a.article.user.user_info).Where<ArticleRequest>(var => var.id == articleId).FirstOrDefault();
+            var art = context.Requests.Include(u => u.article).Include(com => com.article.comments).Include(cat => cat.article.category).Include(t => t.article.user).Include(a => a.article.user.user_info).Where<ArticleRequest>(var => var.id == articleId).FirstOrDefault();
 
             bool ch = bool.Parse(dec);
 
@@ -131,11 +131,10 @@ namespace MyApp.Controllers
                 
                 art.article.comments.Clear();
 
-                art.article.categories.Clear();
+                context.Remove(art.article.category);
 
-                
-                context.Articles.Remove(art.article);
-                
+                art.article.category = null;
+
                 context.Remove(art);
 
                 context.SaveChanges();
